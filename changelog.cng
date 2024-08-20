@@ -1,0 +1,369 @@
+# Creation
+Created February 14th, 2024.
+
+{newLog}
+# Playtest v0.02
+
+## The big stuff
+**-New character:**
+-Brick
+
+**New upgrades:**
+-Extendo Grip
+    +15% Block Range
+    +5% Block Damage
+    -10% Speed
+-Pepto Bismol
+    Parried bullets spawn poison fields
+    -5% Block Range
+
+**New sandbox upgrades:**
+-Nuke
+    Blows up everything, dealing 10000 damage.
+-Gay
+    Makes your character rainbow.
+
+**New Enemies:**
+Enemy11: An average enemy that shoots bullets spawning poison fields.
+dummy: A sandbox enemy that doesnt do anything but display its damage taken.
+largeDummy: Bigger dummy.
+nerfSentry: Like a dummy, but shoots harmless bullets.
+
+**Other stuff:**
+-Parried bullets go towards the cursor instead of back into the enemy that shot it.
+-Game settings to change the starting wave and the amount shop choices.
+-New explosion look to improve performance.
+-Enemies now have a spawn-in animation.
+-Cursor is now a crosshair.
+-Current wave now shows in the middle of the play area.
+-In the sandbox, when you're at 0HP, text will appear in the middle of the play area saying you're dead.
+-You now get points for poison ticks on enemies.
+-The tab title now changes depending on what's happening.
+
+## The small stuff
+-Firefox suggestion on startup because fuck chrome.
+-Heart icon next to health bar.
+-Removed 'ENEMIES LEFT' counter as it was broken and stupid.
+-Upgrades appear smaller in the toolbox to fit more of them.
+-Rounded numbers in the toolbox.
+-Rounded popup numbers.
+-Other bugfixes and cant rember.
+
+
+{newLog}
+# Playtest v0.03
+
+## The big stuff
+**-New characters:**
+-Sasha
+-Dark and Twisted Nyan
+
+**New Enemy:**
+Enemy12: Has a defensive poison field around them, and shoots bullets spawning poison fields.
+
+**Other stuff:**
+-New and improved sound effects by RedJive2.
+-Recolored upgrade textures.
+-New look to the points UI.
+-The Sharpshooter upgrade now multiplies the bullets' damage every time it ricochets.
+-The Sharpshooter upgrade also now doesn't half your bullet grow.
+-Buffed the Drum Mag upgrade.
+-Wavy Title.
+-Credits menu. (Clicking into it unlocked the playtesters' characters!)
+-Characters are now unlockable.
+-In game settings, you can now preview what the area will look like.
+-Updated the stats UI to show all of the new player attributes.
+-Added area settings to the toolbox.
+-Redesigned DeBread character sprites.
+
+## The small stuff
+-The area height setting is now limited at 900 instead of 800.
+-The toolbox now updates automatically when going into the sandbox for the first time.
+-Upgrades are now organized in the toolbox.
+-Sound count now shows in the bottom-right corner.
+-The FPS counter, particle counter, PText counter, and sound counter now change color depending on what the value is.
+-Text buttons in the toolbox now have a hover animation.
+
+
+{newLog}
+# Playtest v0.04
+
+## The big stuff
+
+**-Achievements**
+**-Stats Menu.**
+**-New character select screen.**
+
+**-Characters**
+    -Snorp
+    -Luna
+    -Lye
+    -Normal
+    -Uni
+    -Big Floppa
+
+**-New Upgrades**
+    -Incendiary Rounds
+        Bullets deal fire damage.
+        -20% Damage
+    -Burst
+        +1 Burst Length
+        -20% Max ammo
+        -10% Reload speed
+    -Antibiotics
+        +0.2 Health regen
+        -10% Max health
+    -Black Hole
+        Compresses all damage into your magazine into one bullet.
+        -50% Reload speed
+        -50% Bullet speed
+    
+**-New Enemies:**
+    -Enemy 13: "Very quick and will explode when hit with a bullet or hits the player."
+    -Enemy 14: "A slow moving enemy that shoots grenades."
+    -Enemy 15: "A large, slow moving enemy that shoots grenades and bullets spawning poison fields."
+    -movingDummy (sandbox only)
+
+
+## The small stuff
+
+**GAMEPLAY**
+-Combo now works like pizza tower, where you have to maintain a bar to keep combo.
+-Past wave 50, enemies have a chance of being 'radiant', meaning that they have increased health, and damage.
+-When enemies are killed, a blood splatter appears.
+-Added line drawn from the player showing the shooting trajectory.
+-Added bar under the crosshair showing how much ammo you have left.
+-Game settings now change how much score you get.
+-Enemy bullets now look different.
+-If you have a large bullet size, your bullets will have a higher resolution texture.
+
+**UPGRADES**
+-Removed dizzy upgrade as it caused too many problems.
+-Buffed the Big Bullets upgrade. (+10% damage --> +25% damage)
+-When an error occurs, a notification now appears.
+-The hourglass upgrade now reduces block cooldown.
+
+**UI/MENU**
+-In the main menu, the settings, help, and credits button are smaller.
+-Buttons now play a sound when you click them.
+-Added a button to the main menu linking to the feature and bug report form.
+-Combo loss is now shown on the stats UI.
+-How to play screen now shows all of the style bonuses.
+-Redid character pack colors.
+
+**SETTINGS**
+-Particles are now disabled by default due to how lag inducing they are.
+-The Starting Wave game setting is now limited at your highest wave reached divided by two.
+-When sandbox is enabled in the game settings, the starting wave and shop choices setting are hidden.
+-New 'simple explosions' toggle in settings.
+-New option in settings to change how fast the menu transitions are.
+-Minimum value for the area width and height settings are now 200.
+
+**BUG FIXES**
+-Fixed the "Clear Area" button in the toolbox.
+-Fixed an issue with ricocheted bullets not being removed correctly.
+
+
+{newLog}
+# Playtest v0.05
+
+**-Data Saving**
+
+**GAMEPLAY**
+-New characters:
+    -udev
+    -Baseball
+    -DooD
+    -Conors
+
+-New upgrades:
+    Frostburn:
+        Blocking slows down enemies.
+        -10% Block cooldown
+    Explosive Shield:
+        Blocking blows up enemies.
+        -75% Block damage
+        -10% Block cooldown
+    Sawblade:
+        Creates a sawblade which rotates around the player.
+        -10% Block damage
+    Precision Goggles:
+        +5% Crit chance
+        +10% Bullet speed
+    Ammunition Card:
+        +50% Max ammo
+        +10 Bullet size
+        +5 Bullet bounces
+    Damage Card:
+        +150% Damage
+        +75% Block damage
+        +1 Fire damage
+    Block Card:
+        +100% Block size
+        -75% Block cooldown
+    Health Card:
+        +75% Max health
+        +100% Health
+        +1 Health regen
+    Defense Card:
+        +5 Sawblades
+        +100% Block damage
+        +25% Invincibility time
+    Time Card
+        +100% Speed
+        +50% Reload speed
+        -50% Block cooldown
+        +25% Enemy speed
+
+-New Achievements:
+    Anarchist: Kill 10,000 enemies.
+    Reflex: Parry a bullet with a block size of 100px or less.
+    And I thought 10 digits was too many: Reach 1 billion score.
+    THE LIGHT: ???
+
+-Taunts (press C in game).
+-Bullets now have a chance do deal additional damage (crits).
+-Enemy-shot bullets now have a 'grow' animation when shot.
+-Enemies now stop moving when colliding with the player.
+-In waves past 50, enemies can now be 'radiant', making them faster, have more health, and deal more damage.
+-Enemies with the 'big' attrible now have large health bars that appear at the top of the screen.
+-Some upgrades now have to meet certain requirements to be in the shop.
+-Added a sound effect for when an enemy shoots.
+-When starting a round, the player now spawns in the middle of the area.
+-When your style bar is low, it now starts shaking.
+-Enemy beams now fade in.
+-Blood stains and broken beam elements get cleared when you start a game.
+-Base invincibility time is now 200ms instead of 500ms.
+-Theres now a 2% chance of a special death screen appearing.
+-Nerfed parasite upgrade. (+10% of damage delt => +5% of damage delt)
+-Buffed running shoes upgrade. (+10% speed => +20% speed)
+
+**ENEMY STAT CHANGES**
+-Enemy 0 moves faster. (1.5 => 2.5)
+-Enemy 1 does more bullet damage(15 => 25) and has more health(25 => 50). 
+-Enemy 2 shoots faster.
+-Enemy 2 has more health. (30 => 50)
+-Enemy 3 and 12 now have larger poison fields.
+-Enemy 4 shoots faster. (2500ms => 2000ms)
+
+**SANDBOX**
+-Added a placable explosive.
+-Added mort cube.
+-When spawning an enemy, particles now appear.
+-Added a button in the area settings which removes all blood stains.
+-Enemy texture support.
+-Custom enemy support.
+-Partially remade some of the enemy toobox menu to allow scrolling for excess enemies.
+-Added magnets, only available in the sandbox for now. You can place a magnet by pressing 1.
+
+**MENU**
+-New settings menu.
+-Added a loading screen, also making it so all of the textures will be pre-loaded.
+-When you click on an error notification it now shows the error.
+-Added controls to the how to play menu.
+-Goober drawings now appear in the credits.
+
+**MISC STUFF**
+-Added an explosion sound effect.
+-Added support for Chrome's standalone app feature, making it so you can add Goober Shooter as an app in its own window.
+-Enemies no longer flash just white when hit, they instead flash a brighter version of their main color.
+-Styles worth 0 points no longer get displayed.
+-Changed achievement animation curve.
+-Added support for enemy textures.
+-FPS counter can now be toggled by pressing `.
+-Redid area shaking.
+-Fart site.
+
+**BUG FIXES**
+-Fixed health regen healing while you're in the shop.
+-Fixed the Black Hole and Burst upgrade descriptions.
+-Fixed Z-layering issues regarding the crosshair ammo and popup texts.
+-Fixed the hourglass upgrade not effecting certain enemy attacks.
+-Limited the hourglass upgrade so that the enemy speed multiplier cannot go below 0.1x.
+-Fixed an issue where when you returned to the menu, all of the enemies previously on screen, counted as real kills.
+-Fixed points display not displaying your actual points. (literally its only job)
+-The styles under your points now get cleared when you start a new game.
+-Grenades now have a box around them showing its explosion size.
+-Parried grenades now explode when they hit a wall.
+-The parasite upgrade now only shows popup texts when you are not at max HP.
+-Fixed an issue where sliders didn't display the right value until interacted with.
+-Enemies no longer shoot grenades while spawning.
+-Fixed Nuke upgrade texture.
+-Fixed score multiplier not working.
+-Fixed an issue where the player would die after leaving the sandbox at 0HP.
+-Fixed leftover CSS styles on the style UI.
+-Fixed an issue where the shop would open after you die.
+
+
+{newLog}
+# v1.00
+
+**GAMEPLAY**
+-New characters:
+    Car
+    Asuka
+    Pixel Olive
+
+-New enemies:
+    Enemy 16: "A small enemy that doesnt move nor do damage, but prevents the player from healing."
+    Enemy 17: "A small, stationary enemy that does passive damage to the player over time."
+
+-New Achievements:
+    Beginner: Reach level 10.
+    Novice: Reach level 20.
+    Intermediate: Reach level 30.
+    Professional: Reach level 40.
+    Expert: Reach level 50.
+    Master: Reach level 60.
+    Elite: Reach level 70.
+    Titan: Reach level 80.
+    Legend: Reach level 90.
+    Grandmaster: Reach level 100.
+    Boxer: Kill 100 enemies by punching them.
+    Whoops: Create an explosion larger than 250px.
+    The Smiling Friends: ???
+    Funny: ???
+
+-Levels.
+-Daily Challenges.
+-The shop appears only after every other wave instead of every wave.
+-Player invincibility is no longer a thing, instead, enemies have an attack cooldown.
+-Removed the "poke" point bonus.
+-Some textures actually preload now. Turns out that the loading screen did almost nothing before.
+-Sawblades' radius now is based off of how many sawblades there are, limited at 50.
+-Removed the Wave point bonus.
+-Altered some other point bonuses.
+
+**BALENCE CHANGES**
+-Enemy 2 now shoots slower (100ms => 250ms), does more damage (10 => 15), and has a larger bullet size (5 => 10).
+-Enemy 6's beams now deal more damage (50 => 75).
+-Enemy 8 now is worth less credits (75 => 50).
+-Enemy 12 now hase more health (50 => 75).
+-The Drum Mag upgrade was nerfed. (+25 Max ammo => +10 Max ammo)
+-The Black Hole upgrade was nerfed. (Compress half the damage instead of all)
+
+**SANDBOX**
+-Added a radiate tool.
+
+**UI/MENU**
+-Added a changelog menu.
+-Added a profile card that appears in the main menu.
+
+**SMALL STUFF**
+-When an enemy bullet hits a wall, it spawns particles.
+-Most characters are now unlockable.
+-Jaden has a few more taunt texts.
+-Plonk now has taunt texts.
+-Default player size was raised to 54px.
+-Volume slider in settings.
+-Achievement icons are now slightly larger.
+
+**BUG FIXES**
+-Fixed some settings not resetting when the user presses the reset to default button.
+-Enemy shooting lines are no longer visible while the enemy is spawning.
+-Player-shot bullet particles now scale with the bullet size.
+-Enemies stop shooting and moving after the player dies.
+-Fixed missing pixels on udev.
+-Parried bullets no longer collide with spawning enemies.
+
+{newLog}

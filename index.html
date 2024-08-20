@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="game.css">
+    <link rel="stylesheet" href="menu.css">
+    <link rel="icon" type="image/x-icon" href="media/characters/debread-normal.png">
+    <link rel="manifest" href="manifest.json" />
+    <title>Goober Shooter - Main Menu</title>
+</head>
+
+<body>
+    <em id="saveIndicator">Game Saved.</em>
+    <div id="loadingScreen">
+        <div style="display: flex; align-items: center; flex-direction: column;">
+            <span>LOADING...</span>
+            <span id="loadingScreenPercent">0%</span>
+        </div>
+        <div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+                <div id="loadingScreenBar">
+                    <div id="loadingScreenTotalProgress"></div>
+                </div>
+                <div id="loadingScreenBar" style="height: 5px;">
+                    <div id="loadingScreenGroupProgress"></div>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <em id="loadingScreenInfo">Textures 0/0</em><br>
+                <em id="loadingScreenInfo2">-</em>
+            </div>
+        </div>
+        <img id="loadingScreenImg" height="50">
+    </div>
+    <!-- <div id="startInfoContainer">
+        <div id="startInfo">
+            <img src="media/firefox.png" width="50">
+            <span>For the best experience, play on Firefox.</span>
+        </div>
+    </div> -->
+    <div id="notiContainer"></div>
+    <div id="achNotiContainer">
+        <!-- <div class="achNoti">
+            <span>Achievement Unlocked!</span>
+            <img src="media/guy.png">
+            <div class="achNotiText">
+                <span>Some Achievement</span><br>
+                <span>This is some achievement description</span>
+            </div>
+        </div> -->
+    </div>
+    <div id="challengeCompleteContainer">
+        <!-- <div class="challengeComp">
+            <div class="challengeCompOverlay">
+                <img src="media/checkmark.png" width="50">
+                <span>+50K XP</span>
+            </div>
+            <div class="challengeCompInfo">
+                <span>Sharp Shooter</span>
+                <span>Shoot 250 times.</span><br>
+                <span>250 / 250</span>
+            </div>
+        </div> -->
+    </div>
+    <img id="soggyCat" style="position: absolute; width: 100dvw; height: 100dvh; top: 0; left: 0; opacity: 0; z-index: 9999999; pointer-events: none;"
+        src="https://soggy.cat/img/soggycat.webp">
+    <span id="dbFPS">FPS: -</span>
+    <span id="dbFPSMS">-ms</span>
+    <span id="dbPopupTexts" class="dbDebug" style="bottom: 0px; right: 0px; position: absolute; z-index: 999; line-height: 1; opacity: 0;">PTs: -</span>
+    <span id="dbParticles" class="dbDebug" style="bottom: 25px; right: 0px; position: absolute; z-index: 999; line-height: 1; opacity: 0;">P: -</span>
+    <span id="dbSounds" class="dbDebug" style="bottom: 50px; right: 0px; position: absolute; z-index: 999; line-height: 1; opacity: 0;">S: -</span>
+    <div id="xpContainerScreen"> <!--Idk man-->
+        <div id="xpContainer">
+            <span id="xpProgress">- / - XP</span>
+            <div id="xpBar">
+                <div id="xpCurrentLvl">
+                    <span id="xpCurrentLvlTxt">0</span>
+                </div>
+                <div id="innerXpBar"></div>
+                <div id="xpNextLvl">
+                    <span id="xpNextLvlTxt">1</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN MENU -->
+
+    <div class="genericMenu" id="menu-main">
+        <div id="profile">
+            <img src="media/characters/debread-normal.png" id="profileImg" onclick="openProfileImgPicker()">
+            <div id="profileInfo">
+                <div style="display: flex; justify-content: space-between;">
+                    <input type="text" placeholder="Player" id="profileName">
+                    <img src="media/levelBadges/0.png" id="profileLevelBadge">
+                </div>
+                <div>
+                    <div id="profileLevelInfo">
+                        <span id="profileLevel">Level 0</span>
+                        <span id="profileLevelProgress">0 / 0 XP</span>
+                    </div>
+                    <div id="profileLevelBar">
+                        <div id="innerProfileLevelBar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="menuChallenges">
+            <span style="font-weight: 700;">DAILY CHALLENGES</span>
+            <div id="innerMenuChallenges">
+                <!-- <div class="challenge">
+                    <div class="challengeMain">
+                        <div class="challengeInfo">
+                            <div class="challengeName">
+                                <span>Sharpshooter</span><br>
+                                <span>Kill 250 enemies</span>
+                            </div>
+                            <span class="challengeInfoProgress">0 / 250</span>
+                        </div>
+                        <div class="challengeBar">
+                            <div class="innerChallengeBar"></div>
+                        </div>
+                    </div>
+                    <div class="challengeAward">
+                        <img src="media/xp.png">
+                        <span>25k</span>
+                    </div>
+                </div>
+                <div class="challenge">
+                    <div class="challengeMain">
+                        <div class="challengeInfo">
+                            <div class="challengeName">
+                                <span>Marathon Runner</span><br>
+                                <span>Travel 50,000px</span>
+                            </div>
+                            <span class="challengeInfoProgress">0 / 50,000</span>
+                        </div>
+                        <div class="challengeBar">
+                            <div class="innerChallengeBar"></div>
+                        </div>
+                    </div>
+                    <div class="challengeAward">
+                        <img src="media/xp.png">
+                        <span>100k</span>
+                    </div>
+                </div> -->
+            </div>
+            <span id="challengeTimer">-ms until next refresh</span>
+        </div>
+        <div id="profileImgPickerContainer">
+            <div id="profileImgPicker"></div>
+        </div>
+        <div>
+            <div id="titleScreenTitle"></div>
+            <span style="font-size: 15px;">v1.00</span>
+        </div>
+        <div class="genericMenuButtons">
+            <button class="genericMenuButton" onclick="openMenu('game')">PLAY</button>
+            <button class="genericMenuButton" onclick="openMenu('character')">CHARACTER SELECT</button>
+            <button class="genericMenuButton" onclick="openMenu('achievements')">ACHIEVEMENTS</button>
+            <button class="genericMenuButton" onclick="openMenu('stats')">STATS</button>
+            <div style="display: flex; width: 150px; justify-content: space-between;">
+                <button class="genericSquareButton" onclick="openMenu('settings')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-settings">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path
+                            d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                        <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                    </svg>
+                </button>
+                <button class="genericSquareButton" onclick="openMenu('help')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-help">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                        <path d="M12 17l0 .01" />
+                        <path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4" />
+                    </svg>
+                </button>
+                <button class="genericSquareButton" onclick="openMenu('changelogs')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-history">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M12 8l0 4l2 2" />
+                        <path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" />
+                    </svg>
+                </button>
+                <button class="genericSquareButton" onclick="openMenu('credits')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-users">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                        <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <a href="https://forms.gle/6aFsPgLzBiBYQmem9" target="_blank">Report a bug / request a feature</a>
+    </div>
+
+    <!-- GAME SETTINGS MENU -->
+
+    <div class="genericMenu" id="menu-game" style="display: none;">
+        <span id="titleScreenTitle">GAME SETTINGS</span>
+        <div id="gameSettingsContainer">
+            <section class="gameSettingsSection">
+                <div class="genericMenuButtons">
+                    <button class="genericMenuButton" id="setting-sandbox">SANDBOX MODE</button>
+                    <div class="rangeContainer">
+                        <span id="rangeText-Area-Width">Area Width: 750</span>
+                        <input type="range" value="750" max="1250" min="200" step="25" id="Area-Width" class="genericSlider">
+                    </div>
+                    <div class="rangeContainer">
+                        <span id="rangeText-Area-Height">Area Height: 750</span>
+                        <input type="range" value="750" max="900" min="200" step="25" id="Area-Height" class="genericSlider">
+                    </div>
+                    <div class="rangeContainer nonsandboxSlider">
+                        <span id="rangeText-Starting-Wave">Starting Wave: 0</span>
+                        <input type="range" value="0" max="250" min="0" step="5" id="Starting-Wave" class="genericSlider">
+                    </div>
+                    <div class="rangeContainer nonsandboxSlider">
+                        <span id="rangeText-Shop-Choices">Shop Choices: 3</span>
+                        <input type="range" value="3" max="15" min="1" step="1" id="Shop-Choices" class="genericSlider">
+                    </div>
+                    <button class="genericMenuButton" onclick="resetGameSettings()">RESET TO DEFAULT</button>
+                    <button class="genericMenuButton" style="margin-top: 50px;" onclick="openMenu('play')">START</button>
+
+                    <button class="genericMenuButton" style="margin-top: 50px;" onclick="openMenu('main')">BACK</button>
+                </div>
+            </section>
+            <section class="gameSettingsSection" style="gap: 25px;">
+                <div id="gameSettingsScoreContainer">
+                    <span style="font-size: 0.8em;">SCORE MULTIPLIER:</span><br>
+                    <span style="font-weight: 700;" id="gameSettingsScoreMultiplier">10x</span>
+                </div>
+                <div id="gameSettingsPreview">
+                    <div id="gameAreaPreview">
+                        <span id="gameAreaPreviewNum">69</span>
+                        <div id="gameAreaPreviewUpgradesContainer">
+
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- CHARACTER SELECT MENU -->
+
+    <div class="genericMenu" id="menu-character" style="display: none;">
+        <span id="titleScreenTitle">CHARACTER SELECT</span>
+        <div id="characterInfo">
+            <div>
+                <span id="characterInfoTitle">Some character</span>
+                <span id="characterInfoID">#0</span><br>
+                <span id="characterInfoDesc">Some character description</span><br>
+            </div>
+            <img id="characterInfoImg">
+            <div id="characterTagContainer">
+                <span id="characterTag">Goober Pack</span>
+                <span id="characterTauntable">Tauntable</span>
+            </div>
+        </div>
+
+        <div id="characterSelectContainer"></div>
+        <span>*Some characters cannot be unlocked yet!</span>
+
+        <button class="genericMenuButton" style="margin-top: 50px;" onclick="openMenu('main')">BACK</button>
+        <button class="genericMenuButton" style="position: absolute; bottom: 25px; right: 25px;"
+            onclick="doge('characterCodeContainer').style.display = 'flex'">Input code</button>
+
+        <div id="characterCodeContainer">
+            <div id="characterCode">
+                <div>
+                    <span>Input character code</span><br>
+                    <span>If you are the creator of any of the characters, you can input your code here to unlock it.</span>
+                </div>
+                <input type="text" placeholder="Input code..." id="characterCodeInput">
+                <button class="genericMenuButton" onclick="tryCode()">UNLOCK</button>
+                <button class="genericMenuButton" onclick="doge('characterCodeContainer').style.display = 'none'">BACK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHARACTER CREATION MENU -->
+
+    <div class="genericMenu" id="menu-createCharacter" style="display: none;">
+        <div class="htpBox" style="width: 750px;">
+            <span class="htpBoxHeading">Character creation tutorial</span>
+            <div style="line-height: 1.25;">
+                <span>
+                    After you download the zip file and extract it, it will contain a
+                    <m>template.ase</m> file and 9 textures for each of the looking directions.<br>
+
+                    If you have Aseprite, you could open <m>template.ase</m> and continue from there.
+                    Otherwise, if you don't own it, you can use the nine other textures for reference
+                    in some other free art software.
+                </span>
+            </div>
+            <br>
+            <span class="htpBoxHeading">Character requirements</span>
+            <div style="line-height: 1.25;">
+                <span>-Must have a white outline.</span><br>
+                <span>-Resolution of the textures must be 18x18. (Can be scaled)</span>
+            </div>
+            <br>
+            <span class="htpBoxHeading">When you're done</span>
+            <div style="line-height: 1.25;">
+                <span>
+                    Once you have all nine looking directions exported into a folder,
+                    export it into a zip file and send it to me through my
+                    <a href="https://discord.gg/Zt2Kq2vM7C" target="_blank" style="color: mediumslateblue">Discord server</a>
+                    in <m>#🦊-goober-shooter-feedback</m>.
+                </span>
+            </div>
+            <br>
+            <span class="htpBoxHeading">Still stuck?</span>
+            <div style="line-height: 1.25;">
+                <span>
+                    If you're having problems about how this works, please contact me through
+                    <a target="_blank" href="https://discord.com/users/526773449163538433" style="color: mediumslateblue">Discord</a>.
+                </span>
+            </div>
+            <div style="display: flex; justify-content: center; margin: 25px;">
+                <button class="genericMenuButton"><a href="GSCharacter-template.zip" download>Download Template</a></button>
+            </div>
+        </div>
+        <button class="genericMenuButton" style="margin-top: 50px;" onclick="openMenu('character')">BACK</button>
+    </div>
+
+    <!-- SETTINGS MENU -->
+
+    <div class="genericMenu" id="menu-settings" style="display: none;">
+        <span id="titleScreenTitle">SETTINGS</span>
+        <div id="settingsContainer">
+            <div id="settingsTabs">
+                <div class="settingTab" id="settingTab-gameplay" selected="true" onclick="changeSettingTab('gameplay')">Gameplay</div>
+                <div class="settingTab" id="settingTab-display" selected="false" onclick="changeSettingTab('display')">Display</div>
+                <div class="settingTab" id="settingTab-audio" selected="false" onclick="changeSettingTab('audio')">Audio</div>
+                <div class="settingTab" id="settingTab-advanced" selected="false" onclick="changeSettingTab('advanced')">Advanced</div>
+            </div>
+            <div id="innerSettings">
+                <div id="settingMenu-gameplay" class="genericSettingsMenu">
+                    <div class="settingContainer">
+                        <div class="genericCheckbox" id="scb-squareExplosions" checked="true"></div>
+                        <div class="settingInfo">
+                            <span>Square Explosions</span><br>
+                            <em>Makes explosions square to match thier hitboxes.</em>
+                        </div>
+                    </div>
+                    <div class="settingContainer">
+                        <div class="genericCheckbox" id="scb-simpleExplosions" checked="false"></div>
+                        <div class="settingInfo">
+                            <span>Simple Explosions</span><br>
+                            <em>Increases performance by reducing explosion effects.</em>
+                        </div>
+                    </div>
+                    <div class="settingContainer">
+                        <div class="genericCheckbox" id="scb-screenshake" checked="false"></div>
+                        <div class="settingInfo">
+                            <span>Screenshake</span><br>
+                            <em>Adds screenshake effects.</em>
+                        </div>
+                    </div>
+                    <div class="settingContainer">
+                        <div class="genericCheckbox" id="scb-keepStatsOpen" checked="false"></div>
+                        <div class="settingInfo">
+                            <span>Keep stats open</span><br>
+                            <em>Makes the stats UI always visible. While off, you can hold tab to view them.</em>
+                        </div>
+                    </div>
+                    <div class="settingContainer">
+                        <div class="genericCheckbox" id="scb-showXP" checked="false"></div>
+                        <div class="settingInfo">
+                            <span>Display XP in game</span><br>
+                            <em>Displays the current amount of XP gained under the points counter.</em>
+                        </div>
+                    </div>
+                    <div class="settingContainer">
+                        <div class="genericCheckbox" id="scb-showGameOverflow" checked="false"></div>
+                        <div class="settingInfo">
+                            <span>Show game overflow</span><br>
+                            <em>Displays elements located outside of the game bounds.</em>
+                        </div>
+                    </div>
+                    <div class="settingContainer">
+                        <div class="genericCheckbox" id="scb-particles" checked="false"></div>
+                        <div class="settingInfo">
+                            <span>Extra Particles</span><br>
+                            <em>Allows extra particles to spawn, disabled by default as it tanks performance.</em>
+                        </div>
+                    </div>
+                    <div class="rangeContainer" id="particleSlider">
+                        <span id="rangeText-particleLimit">Particle Limit: 0</span>
+                        <input type="range" value="200" max="500" min="25" step="25" id="particleLimit" class="genericSlider">
+                    </div>
+                </div>
+                <div style="display: none;" id="settingMenu-display" class="genericSettingsMenu">
+                    <div class="settingContainer">
+                        <div class="genericCheckbox" id="scb-fpsCounter" checked="false"></div>
+                        <div class="settingInfo">
+                            <span>FPS Counter</span><br>
+                            <em>Displays FPS and ms. (Can be toggled by pressing `)</em>
+                        </div>
+                    </div>
+                    <div class="settingContainer">
+                        <div class="genericCheckbox" id="scb-fullscreen" checked="false"></div>
+                        <div class="settingInfo">
+                            <span>Fullscreen</span><br>
+                            <em>Why go here when you can just press F11.</em>
+                        </div>
+                    </div>
+                    <div class="rangeContainer">
+                        <span id="rangeText-brightness">Brightness: 0</span>
+                        <input type="range" value="1" max="10" min="0.2" step="0.1" id="brightness" class="genericSlider">
+                    </div>
+                    <div class="rangeContainer">
+                        <span id="rangeText-menu-transition-speed">Menu transition speed: 0</span>
+                        <input type="range" value="250" max="1000" min="0" step="50" id="menu-transition-speed" class="genericSlider">
+                    </div>
+                    <div style="display: flex; justify-content: center;">
+                        <img id="ashbaby" src="https://i.redd.it/ztv4vguqi14c1.png" width="200" style="opacity: 0;">
+                    </div>
+                </div>
+                <div style="display: none;" id="settingMenu-audio" class="genericSettingsMenu">
+                    <div class="settingContainer">
+                        <div class="genericCheckbox" id="scb-sfx" checked="false"></div>
+                        <div class="settingInfo">
+                            <span>SFX</span><br>
+                            <em>Allows sound effects to be played.</em>
+                        </div>
+                    </div>
+                    <div class="rangeContainer">
+                        <span id="rangeText-Volume">Volume: 0</span>
+                        <input type="range" value="1" max="3" min="0" step="0.1" id="Volume" class="genericSlider">
+                    </div>
+                </div>
+                <div style="display: none;" id="settingMenu-advanced" class="genericSettingsMenu">
+                    <button class="genericMenuButton" onclick="console.log(data)">Log data</button>
+                </div>
+            </div>
+        </div>
+        <button class="genericMenuButton" style="margin-top: 50px;" onclick="openMenu('main')">BACK</button>
+        <span style="position: absolute; bottom: 5px; left: 5px; color: red; cursor: pointer;" onclick="deleteSave()">Delete Save</span>
+    </div>
+
+    <!-- ACHIEVEMENTS MENU -->
+
+    <div class="genericMenu" id="menu-achievements" style="display: none;">
+        <div>
+            <span id="titleScreenTitle">ACHIEVEMENTS</span>
+        </div>
+
+        <div id="achievementsContainer">
+            <div class="achievement">
+                <!-- <img src="media/guy.png"> -->
+                <div class="achievementText">
+                    <span>Some achievement name</span>
+                    <span>Some achievement description</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="genericMenuButtons">
+            <button class="genericMenuButton" style="margin-top: 50px;" onclick="openMenu('main')">BACK</button>
+        </div>
+    </div>
+
+    <!-- STATS MENU -->
+
+    <div class="genericMenu" id="menu-stats" style="display: none;">
+        <div>
+            <span id="titleScreenTitle">STATISTICS</span>
+        </div>
+
+        <div style="display: flex; gap: 25px;">
+            <div class="htpBox" style="height: fit-content;">
+                <span class="htpBoxHeading">Upgrades Bought</span><br>
+                <div id="statsUpgradesContainer">
+                    <div class="statsUpgrade">
+                        <img class="statsUpgradeImg" src="media/upgrades/Adrenaline.png">
+                        <div class="statsUpgradeBar"></div>
+                    </div>
+                </div>
+                <div id="statsUpgradeShowMore">Show more</div>
+            </div>
+            <div class="htpBox" style="min-width: 250px;">
+                <span class="htpBoxHeading">General Stats</span><br>
+                <div style="line-height: 1.1;">
+                    <span id="statMenuEnemiesKilled">Enemies Killed: 0</span><br>
+                    <span id="statMenuTimesParried">Times Parried: 0</span><br>
+                    <span id="statMenuHighestWave">Highest Wave: 0</span><br>
+                    <span id="statMenuHighScore">Highest Score: 0</span><br>
+                    <span id="statMenuTotalScore">Total Score: 0</span><br>
+                    <span id="statMenuUpgradesBought">Upgrades Bought: 0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="genericMenuButtons">
+            <button class="genericMenuButton" style="margin-top: 50px;" onclick="openMenu('main')">BACK</button>
+        </div>
+    </div>
+
+    <!-- HELP MENU -->
+
+    <div class="genericMenu" id="menu-help" style="display: none;">
+        <span id="titleScreenTitle">HOW TO PLAY</span>
+        <div style="display: flex; gap: 25px;">
+            <div class="htpBox" style="width: 400px;">
+                <span class="htpBoxHeading">Controls</span>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <div class="control">
+                        <span>Move up</span>
+                        <line></line>
+                        <div class="key">W</div>
+                    </div>
+                    <div class="control">
+                        <span>Move left</span>
+                        <line></line>
+                        <div class="key">A</div>
+                    </div>
+                    <div class="control">
+                        <span>Move down</span>
+                        <line></line>
+                        <div class="key">S</div>
+                    </div>
+                    <div class="control">
+                        <span>Move right</span>
+                        <line></line>
+                        <div class="key">D</div>
+                    </div>
+                    <div class="control">
+                        <span>Reload</span>
+                        <line></line>
+                        <div class="key">R</div>
+                    </div>
+                    <div class="control">
+                        <span>Taunt</span>
+                        <line></line>
+                        <div class="key">C</div>
+                    </div>
+                    <div class="control">
+                        <span>Shoot</span>
+                        <line></line>
+                        <div class="key" style="width: 125px;">L-MOUSE</div>
+                    </div>
+                    <div class="control">
+                        <span>Block/Parry</span>
+                        <line></line>
+                        <div class="key" style="width: 140px;">R-MOUSE</div>
+                    </div>
+                    <div class="control">
+                        <span>Show stats</span>
+                        <line></line>
+                        <div class="key" style="width: 75px;">TAB</div>
+                    </div>
+                    <div class="control">
+                        <span>Toggle FPS counter</span>
+                        <line></line>
+                        <div class="key">`</div>
+                    </div>
+                </div>
+            </div>
+            <div class="htpBox">
+                <span class="htpBoxHeading">Style Bonuses</span>
+                <div class="htpTableContainer">
+                    <div class="htpTableColumn">
+                        <div><em>Name</em></div>
+                        <div>Kill</div>
+                        <div>Radiant kill</div>
+                        <div>Overkill</div>
+                        <div>Crit</div>
+                        <div>Exploded</div>
+                        <div>Punched</div>
+                        <div>Cut</div>
+                        <div>Poisoned</div>
+                        <div>Burnt</div>
+                        <div>Ricochet</div>
+                        <div>Parry</div>
+                        <div>Enemy spawned</div>
+                        <div>Combo x</div>
+                    </div>
+                    <div class="htpTableColumn">
+                        <div><em>Description</em></div>
+                        <div>Kill an enemy.</div>
+                        <div>Kill an enemy that is radiant.</div>
+                        <div>Deal more than double an enemy's health in damage to that enemy.</div>
+                        <div>Land a critical hit.</div>
+                        <div>Kill an enemy with an explosion.</div>
+                        <div>Melee an enemy.</div>
+                        <div>Kill an enemy with a sawblade.</div>
+                        <div>Deal poison damage to an enemy.</div>
+                        <div>Kill an enemy while it's on fire.</div>
+                        <div>Bounce a bullet into an enemy.</div>
+                        <div>Parry an enemy's bullet.</div>
+                        <div>Let an enemy spawn.</div>
+                        <div>Reach a combo of 10 or a multiple of 25.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="genericMenuButtons">
+            <button class="genericMenuButton" style="margin-top: 50px;" onclick="openMenu('main')">BACK</button>
+        </div>
+    </div>
+
+    <!-- CHANGELOG MENU -->
+
+    <div class="genericMenu" id="menu-changelogs" style="display: none;">
+        <span id="titleScreenTitle">CHANGELOGS</span>
+        <div id="changelogContainer">
+            <div id="innerChangelog">
+            </div>
+            <div id="changelogFooterContainer">
+                <button class="genericMenuButton" id="changelogSeekPrev">&lt;</button>
+                <span id="changelogVersionNumber">v0.00</span>
+                <button class="genericMenuButton" id="changelogSeekNext">></button>
+            </div>
+        </div>
+        <div class="genericMenuButtons">
+            <button class="genericMenuButton" style="margin-top: 50px;" onclick="openMenu('main')">BACK</button>
+        </div>
+    </div>
+
+    <!-- CREDITS MENU -->
+
+    <div class="genericMenu" id="menu-credits" style="display: none;">
+        <div id="innerCredits">
+            <span id="titleScreenTitle">CREDITS</span>
+
+            <div style="margin-top: 25px; line-height: 1.1; text-align: center;">
+                <span style="font-size: 0.9em;">Main Developer</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">DeBread</span><br>
+                <br>
+                <span style="margin-top: 250px;font-size: 0.9em;">Additional SFX & Help</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">RedJive2</span><br>
+                <br>
+                <span style="margin-top: 250px;font-size: 0.9em;">Additional Textures</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">Plonk</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">Robin</span><br>
+                <br>
+                <span style="margin-top: 250px;font-size: 0.9em;">Playtesters</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">Plonk</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">Nyan</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">Robin</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">udev21</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">RedJive2</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">Jaden</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">Hugo</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">Tobi</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">Mario</span><br>
+                <br>
+                <span style="margin-top: 250px;font-size: 0.9em;">Additional Glyphs / Icons</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">tabler.io</span><br>
+                <br>
+                <span style="margin-top: 250px;font-size: 0.9em;">Special Thanks</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">SwaawS</span><br>
+                <span style="font-size: 0.9em;">Home of the Goobers</span><br>
+            </div>
+            <div class="genericMenuButtons">
+                <button class="genericMenuButton" style="margin-top: 50px;" onclick="openMenu('main')">BACK</button>
+            </div>
+        </div>
+        <div id="bgCredits"></div>
+    </div>
+    <div id="shop">
+        <div id="shopUpgradeInfo">
+            <span id="shopUpgradeName">UPGRADE NAME</span>
+            <div id="shopUpgradeDescContainer">
+                <span id="shopUpgradeDesc">This is an upgrade description. :D</span>
+            </div>
+        </div>
+        <div id="shopUpgrades">
+            <div id="shopUpgrade">
+                <img src="media/upgrades/Hour_Glass.png">
+            </div>
+            <div id="shopUpgrade">
+                <img src="media/upgrades/Hour_Glass.png">
+            </div>
+            <div id="shopUpgrade">
+                <img src="media/upgrades/Hour_Glass.png">
+            </div>
+        </div>
+        <div id="shopInventory">
+            <div>
+                <span>UPGRADE INVENTORY</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="deathScreenContainer">
+        <div id="deathScreen">
+            <span style="font-size: 2em; font-weight: 900;">YOU DEAD</span>
+            <span id="pointsResult">POINTS: idk</span>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+                <button class="genericMenuButton" onclick="openMenu('play'); closeDeathScreen(); resetPlayer()" style="margin-top: 10px;">RESTART</button>
+                <button class="genericMenuButton" onclick="openMenu('game'); closeDeathScreen()">GAME SETTINGS</button>
+                <button class="genericMenuButton" onclick="openMenu('main'); closeDeathScreen()">MAIN MENU</button>
+            </div>
+        </div>
+    </div>
+    <video src="media/fries.mp4" id="deathVideo"></video>
+    <div id="pauseContainer">
+        <div id="pause">
+            <span style="font-size: 2em; font-weight: 900;">PAUSED</span>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+                <button class="genericMenuButton" onclick="togglePauseScreen(); closeDeathScreen()">RESUME</button>
+                <button class="genericMenuButton" onclick="togglePauseScreen(); openMenu('play'); closeDeathScreen()">RESTART</button>
+                <button class=" genericMenuButton" onclick="togglePauseScreen(); openMenu('main'); closeDeathScreen()">MAIN MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME -->
+
+    <div id="menu-play">
+        <div id="ui">
+            <div id="playerBars">
+                <div class="playerBar" id="healthBarContainer">
+                    <img src="media/glyphs/health.png" height="15">
+                    <div class="playerBarContainer" id="healthContainer">
+                        <div id="healthBar" style="background-color: red;"></div>
+                        <div id="lowerHealthBar"></div>
+                    </div>
+                    <span id="healthDisplay">100</span>
+                </div>
+
+                <div class="playerBar" id="superBarContainer" style="display: none;">
+                    <img src="media/glyphs/super.png" height="15">
+                    <div class="playerBarContainer" id="superContainer">
+                        <div id="superBar" style="background-color: white;"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="statsContainer">
+                <div id="stats">
+                    <span class="statTitle">PLAYER</span>
+                    <span id="statPlayerSpeed">Speed: -</span>
+                    <span id="statPlayerMaxHealth">Max Health: -</span>
+                    <span id="statPlayerComboLoss">Combo Loss: -</span>
+
+                    <span class="statTitle" style="margin-top: 25px;">BLOCK</span>
+                    <span id="statBlockSize">Size: -</span>
+                    <span id="statBlockCooldown">Cooldown: -</span>
+                    <span id="statBlockDamage">Damage: -</span>
+
+                    <span class="statTitle" style="margin-top: 25px;">GUN</span>
+                    <span id="statGunDamage">Damage: -</span>
+                    <span id="statGunMaxAmmo">Max Ammo: -</span>
+                    <span id="statGunBulletSpeed">Bullet Speed: -</span>
+                    <span id="statGunBulletSize">Bullet Size: -</span>
+                    <span id="statGunReloadSpeed">Reload Speed: -</span>
+                    <span id="statGunParasitePercent">Parasite Percent: -</span>
+                    <span id="statGunExplosionSize">Explosion Size: -</span>
+                    <span id="statGunPoisonLength">Poison Length: -</span>
+                    <span id="statGunGrow">Grow Amount: -</span>
+                    <span id="statGunFireDamage">Fire Damage: -</span>
+                    <span id="statGunRicochets">Bullet Bounces: -</span>
+                    <span id="statGunRicochetMultiplier">Bullet Bounce Multiplier: -</span>
+
+                    <span class="statTitle" style="margin-top: 25px;">ENEMIES</span>
+                    <span id="statEnemySpeedMultiplier">Speed Multiplier: -</span>
+                </div>
+            </div>
+            <div id="bigHealthBarContainer">
+                <!-- <div class="bigHealthBar">
+                    <div class="innerBigHealthBar"></div>
+                </div> -->
+            </div>
+            <div id="ammoUI">
+                <span id="ammoDisplay">
+                    <span id="ammoNumber">00</span>
+                    <span id="ammoNumberBar">||||||||||</span>
+                </span>
+                <div id="ammoBar">
+                    <div id="innerAmmoBar"></div>
+                </div>
+            </div>
+            <div id="topLeftUI">
+                <span id="pointsDisplay">0000000000</span><br>
+                <span id="xpDisplay">0XP</span>
+                <div id="comboDisplayContainer">
+                    <span id="comboDisplay">x1</span>
+                    <div id="styleDisplay">
+                        <div id="innerStyleDisplay"></div>
+                    </div>
+                </div>
+                <div id="styleContainer">
+                    <div id="styleUI">
+                        <div class="style">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="gameChallenges">
+                <!-- <div class="gameChallenge">
+                    <div class="gameChallengeInfo">
+                        <span>Some challenge description</span>
+                        <span>0 / 250000</span>
+                    </div>
+                    <div class="gameChallengeBar">
+                        <div class="gameChallengeInnerBar"></div>
+                    </div>
+                </div> -->
+            </div>
+
+            <div id="toolboxContainer">
+                <div id="toolboxTab">
+                    <span>TOOLBOX</span>
+                </div>
+                <div id="toolbox">
+                    <div id="toolboxMenus">
+                        <button id="toolboxMenuButton0" onclick="renderToolboxMenu(0)" style="height: 100%; width: 100%;">Enemies</button>
+                        <button id="toolboxMenuButton3" onclick="renderToolboxMenu(3)" style="height: 100%; width: 100%;">Upgrades</button>
+                        <button id="toolboxMenuButton1" onclick="renderToolboxMenu(1)" style="height: 100%; width: 100%;">Gun</button>
+                        <button id="toolboxMenuButton2" onclick="renderToolboxMenu(2)" style="height: 100%; width: 100%;">Player</button>
+                        <button id="toolboxMenuButton4" onclick="renderToolboxMenu(4)" style="height: 100%; width: 100%;">Area</button>
+                    </div>
+                    <div id="innerToolbox">
+
+                    </div>
+                    <div id="toolboxHelp">
+                        <em id="innerToolbarHelp"></em>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 25px;">
+            <div id="game">
+                <div id="crosshairAmmo">
+                    <div id="innerCrosshairAmmo"></div>
+                </div>
+                <span id="areaText"></span>
+                <player id="player">
+                    <div id="playerTextureContainer">
+                        <img id="playerTexture"></img>
+                    </div>
+                </player>
+                <div id="blockHitbox">
+                    <div id="innerBlockHitbox"></div>
+                </div>
+                <gun id="gun"></gun>
+                <div id="enemyD"></div>
+                <canvas id="gameCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- <button onclick="openShop(upgrades.length)" style="position: absolute; right: 0; bottom: 45px;">Open Shop</button> -->
+    <!-- <button onclick="spawnWave(10)" style="position: absolute; right: 0; bottom: 0;">Spawn Wave (10)</button> -->
+
+    <script src="DeBread.js"></script>
+    <script src="script.js"></script>
+    <script src="characters.js"></script>
+    <script src="menu.js"></script>
+    <script src="game.js"></script>
+    <script src="sandbox.js"></script>
+    <script src="achievements.js"></script>
+    <script>
+        let totalTextures = 0
+        let totalTexturesLoaded = 0
+        for (const group in imagesToLoad) {
+            for (let i = 0; i < imagesToLoad[group].length; i++) {
+                totalTextures++
+            }
+        }
+        loadTextures('characters', () => { loadTextures('achievements', () => { loadTextures('upgrades', () => { loadTextures('gooberDrawings', () => { loadTextures('misc') }) }) }) }) //Ignore this
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1311 @@
+@font-face {
+  font-family: 'vcr';
+  src: url(media/fonts/VCRMONO.ttf);
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+m {
+  font-family: 'Roboto Mono', monospace;
+  outline: 2px solid rgb(255, 255, 255, 0.1);
+}
+
+#saveIndicator {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  padding: 5px;
+  background-color: rgb(0, 0, 0, 0.25);
+  border-radius: 5px;
+  animation: fadeOut 1s ease-in-out 1 forwards;
+  z-index: 10000;
+  pointer-events: none;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+  }
+}
+
+#loadingScreen {
+  width: 100dvw;
+  height: 100dvh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 15;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: black;
+  gap: 25px;
+  transition: opacity ease-in-out 500ms;
+  cursor: wait;
+}
+
+#loadingScreenBar {
+  outline: 2px solid white;
+  width: 450px;
+  height: 15px;
+}
+
+#loadingScreenGroupProgress, #loadingScreenTotalProgress {
+  height: 100%;
+  width: 0%;
+  background-color: white;
+  transition: width cubic-bezier(0,1,0,1) 250ms;
+}
+
+#loadingScreenInfo, #loadingScreenInfo2 {
+  font-size: 0.75em;
+  color: grey;
+}
+
+#startInfoContainer {
+  width: 100dvw;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  animation: startFade1 4s ease-in-out 1 forwards;
+}
+
+@keyframes startFade1 {
+  90% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    display: none;
+    pointer-events: none;
+  }
+}
+
+#startInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 25px;
+  animation: startFade0 3s ease-in-out 1 forwards;
+}
+
+@keyframes startFade0 {
+  from {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+#notiContainer {
+  position: absolute;
+  left: 10px;
+  /* bottom: 10px; */
+  top: 10px; 
+  /* why is it making me put it on the top 😭😭😭😭 */
+  display: flex;
+  flex-direction: column-reverse;
+  pointer-events: none;
+  gap: 10px;
+  z-index: 11;
+}
+
+.noti {
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  outline: 2px solid white;
+  border-radius: 5px;
+  width: 325px;
+  height: 75px;
+  z-index: 10;
+  padding: 5px 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
+  animation: notiIn 500ms cubic-bezier(0,1,.5,1) 1 forwards;
+  opacity: 1;
+  transition: opacity ease-in-out 1s;
+  cursor: pointer;
+  pointer-events: all;
+}
+
+@keyframes notiIn {
+  from {
+    height: 0;
+    padding: 5px 0px;
+  }
+}
+
+.noti img {
+  height: 75px;
+}
+
+#achNotiContainer {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 100dvw;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  z-index: 5;
+  gap: 5px;
+  z-index: 11;
+}
+
+.achNoti {
+  width: 250px;
+  height: 25px;
+  padding: 5px;
+  border-radius: 10px;
+  outline: 2px solid white;
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  overflow: hidden;
+  cursor: default;
+  transition: width cubic-bezier(.75,-0.5,.25,1.5) 500ms, height cubic-bezier(.75,-0.5,.25,1.5) 500ms, opacity ease-in-out 1s;
+}
+
+.achNotiAnim {
+  animation: achNotiIn 500ms var(--bouncy) 1 forwards;
+}
+
+@keyframes achNotiIn {
+  from {
+    height: 0;
+    padding: 0;
+    opacity: 0;
+  }
+}
+
+.achNoti img {
+  width: 50px;
+  height: 50px;
+}
+
+.achNotiText {
+  text-align: left; 
+  width: 100%; 
+  line-height: 1.1;
+}
+
+.achNotiText span:nth-child(1) {
+  font-weight: 700;
+}
+
+#challengeCompleteContainer {
+  width: 100dvw;
+  position: absolute;
+  left: 0;
+  top: 100px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 25px;
+  z-index: 50;
+}
+
+.challengeComp {
+  outline: 2px solid white;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  line-height: 1.1;
+  width: 300px;
+  opacity: 0;
+  position: relative;
+  animation: challengeCompAnim 3s ease-out 1 forwards;
+  transition: opacity ease-in-out 500ms, height ease-in-out 500ms;
+}
+
+.challengeCompInfo span:nth-child(1) {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+@keyframes challengeCompAnim {
+  50% {
+    scale: 0.9;
+  }
+  55% {
+    scale: 1.1;
+    outline: 2px solid white;
+    color: white;
+  }
+  100% {
+    scale: 1;
+    outline: 2px solid grey;
+    color: grey;
+  }
+}
+
+.challengeCompOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.challengeCompOverlay img {
+  animation: challengeCompImgAnim 3s ease-out 1 forwards;
+}
+
+@keyframes challengeCompImgAnim {
+  from, 50% {
+    opacity: 0;
+    scale: 2;
+  }
+  55% {
+    scale: 0.9;
+    opacity: 1;
+  }
+  100% {
+    scale: 1;
+  }
+}
+
+.challengeCompOverlay span {
+  animation: challengeCompTextAnim 3s ease-out 1 forwards;
+  font-weight: 700;
+  font-size: 1.25em;
+  color: white;
+}
+
+@keyframes challengeCompTextAnim {
+  from, 90% {
+    height: 0;
+    opacity: 0;
+    scale: 1.5;
+  }
+  100% {
+    height: 25px;
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+#xpContainerScreen {
+  width: 100dvw;
+  height: 100dvh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+#xpContainer {
+  width: 100dvw;
+  position: absolute;
+  bottom: -50px;
+  left: 0;
+  z-index: 500000000000;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 5px;
+  scale: 90%;
+  transition: bottom cubic-bezier(.5,0,.5,1) 500ms, scale cubic-bezier(.5,0,.5,1) 500ms;
+}
+
+#xpProgress {
+  font-family: 'Roboto Mono', monospace;
+}
+
+#xpBar {
+  width: 500px;
+  height: 20px;
+  outline: 2px solid white;
+  position: relative;
+}
+
+#innerXpBar {
+  width: 50%;
+  height: 100%;
+  background-color: white;
+}
+
+#xpCurrentLvl, #xpNextLvl {
+  position: absolute;
+  top: -27.5px;
+  width: 75px;
+  height: 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.5em;
+}
+
+#xpCurrentLvl {
+  left: -60px;
+  background-image: url(media/levelBadges/6.png);
+}
+
+#xpNextLvl {
+  right: -60px;
+  background-image: url(media/levelBadges/7.png);
+  animation: xpBadgePulse 500ms ease-out 1 forwards;
+}
+
+@keyframes xpBadgePulse {
+  from {
+    scale: 140%;
+  }
+}
+
+.genericMenu {
+  width: 100dvw;
+  height: 100dvh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: url(media/bg.svg);
+  background-color: black;
+  background-size: 250px;
+  box-shadow: inset 0px 0px 50px 50px black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 25px;
+  z-index: 10;
+  cursor: default;
+  transition: filter ease-in-out 250ms;
+  animation: titleBG 10s linear infinite forwards;
+}
+  
+@keyframes titleBG {
+  to {
+    background-position: 250px 250px;
+  }
+}
+
+#profile {
+  display: flex;
+  gap: 5px;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  outline: 2px solid white;
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 5px;
+}
+
+#profileImg {
+  width: 75px;
+  cursor: pointer;
+}
+
+#profileInfo {
+  height: 75px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#profileInfo input {
+  font-family: "Poppins", sans-serif;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  font-size: 1.15em;
+  font-weight: 700;
+  width: 200px;
+}
+
+#profileInfo input:focus {
+  outline: none;
+}
+
+#profileLevelInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+#profileLevelProgress {
+  font-size: 0.75em;
+}
+
+#profileLevelBadge {
+  width: 40px;
+  height: 40px;
+  image-rendering: unset;
+}
+
+
+#profileLevelBar {
+  width: 100%;
+  height: 2px;
+  background-color: grey;
+}
+
+#innerProfileLevelBar {
+  width: 50%;
+  height: 100%;
+  background-color: white;
+}
+
+#profileImgPickerContainer {
+  width: 100dvw;
+  height: 100dvh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: all;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+#profileImgPicker {
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  outline: 2px solid white;
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  width: 265px;
+}
+
+.profileImgButton {
+  padding: 5px;
+  width: 75px;
+  height: 75px;
+  outline: 2px solid white;
+  cursor: pointer;
+}
+
+.profileImgButton img {
+  width: 100%;
+}
+
+.profileImgButton:hover {
+  background-color: white;
+}
+
+#menuChallenges {
+  position: absolute;
+  top: 50px;
+  right: 50px;
+  padding: 5px;
+  outline: 2px solid white;
+  width: 350px;
+  text-align: right;
+  backdrop-filter: blur(10px);
+  background-color: rgb(0, 0, 0, 0.5);
+}
+
+.challenge {
+  display: flex;
+  padding: 5px;
+  gap: 10px;
+}
+
+.challengeMain {
+  width: 100%;
+}
+
+.challengeMain, .challengeAward {
+  outline: 2px solid white;
+  padding: 5px;
+}
+
+.challengeAward {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.challengeAward img {
+  width: 30px;
+  image-rendering: unset;
+}
+
+.challengeInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.challengeInfo span:nth-child(1) {
+  font-weight: 600;
+}
+
+.challengeName {
+  text-align: left;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.challengeName span:nth-child(3) {
+  font-size: 0.8em;
+}
+
+.challengeInfoProgress {
+  font-size: 0.8em;
+  white-space: nowrap;
+}
+
+.challengeBar {
+  width: 100%;
+  height: 2px;
+  background-color: grey;
+}
+
+.innerChallengeBar {
+  height: 100%;
+  width: 50%;
+  background-color: white;
+}
+
+.challengeAwards {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 5px;
+}
+
+.challengeAwards div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.challengeAwards div img {
+  width: 20px;
+  image-rendering: unset;
+}
+
+#titleScreenTitle {
+  font-size: 2em;
+  font-weight: 700;
+  text-align: center;
+  line-height: 1;
+  display: flex;
+}
+
+@keyframes charWave {
+  from {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+  to {
+    transform: translateY(-5px);
+  }
+}
+
+#gameSettingsContainer {
+  display: flex;
+}
+
+.gameSettingsSection {
+  width: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#gameSettingsScoreContainer {
+  width: 250px;
+  padding: 5px;
+  outline: 2px solid white;
+  line-height: 1;
+}
+
+#gameSettingsPreview {
+  outline: 3px solid rgb(255, 255, 255, 0.5);
+  height: 250px;
+  width: 250px;
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#gameAreaPreview {
+  width: 150px;
+  height: 150px;
+  outline: 3px solid white;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+#gameAreaPreviewNum {
+  opacity: 0.1;
+  font-weight: 900;
+  font-size: 2em;
+}
+
+#gameAreaPreviewUpgradesContainer { /*I love naming things in css :D */
+  position: absolute;
+  bottom: 5px;
+  gap: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap-reverse;
+}
+
+.gameAreaPreviewUpgrade {
+  width: 5px;
+  height: 5px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.genericMenuButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+input[type="range"] {
+  /* outline: 1px solid white; */
+  background-color: transparent;
+  -webkit-appearance: none;
+  cursor: pointer;
+  height: 15px;
+  width: 150px;
+  transition: width var(--bouncy) 0.25s;
+}
+
+input[type="range"]:hover {
+  width: 200px;
+}
+
+/* not firefox */
+input[type="range"]::-webkit-slider-runnable-track {
+  background: transparent;
+  outline: 2px solid white;
+  height: 15px;
+}
+
+/* not firefox */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; /* Override default look */
+  appearance: none;
+  background-color: white;
+  height: 15px;
+  width: 15px;
+}
+
+/* firefox */
+input[type="range"]::-moz-range-track {
+  outline: 2px solid white;
+  height: 15px;
+}
+
+/* firefox */
+input[type="range"]::-moz-range-thumb {
+  border: none; /*Removes extra border that FF applies*/
+  border-radius: 0; /*Removes default border-radius that FF applies*/
+  background-color: white;
+  height: 15px;
+}
+
+.rangeContainer {
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
+}
+
+.genericMenuButton {
+  background-color: transparent;
+  color: white;
+  width: 150px;
+  height: 30px;
+  border: none;
+  outline: 2px solid white;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: width var(--bouncy) 0.25s;
+}
+
+.genericMenuButton:hover {
+  background-color: white;
+  color: black;
+  width: 155px;
+}
+
+.genericMenuButton:hover a {
+  color: black;
+  text-decoration: none;
+}
+
+.genericMenuButton:active {
+  width: 145px;
+}
+
+.genericSquareButton {
+  background-color: transparent;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border: none;
+  outline: 2px solid white;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: width var(--bouncy) 0.25s;
+}
+
+.genericSquareButton:hover {
+  width: 40px;
+  background-color: white;
+  color: black;
+}
+
+.genericSquareButton:active {
+  width: 30px;
+}
+
+.genericSquareButton svg {
+  scale: 110%;
+}
+
+#achievementsContainer {
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  outline: 2px solid white;
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  width: 946px;
+  max-height: 525px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.achievement {
+  width: 300px;
+  height: 54px;
+  display: flex;
+  gap: 5px;
+  outline: 2px solid white;
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 5px;
+}
+
+.achievement img {
+  width: 54px;
+  height: 54px;
+}
+
+.achievementText {
+  line-height: 1;
+  max-width: 240px;
+}
+
+.achievementText span:nth-child(1) {
+  font-weight: 700;
+}
+
+.achievementProgressBar {
+  width: 100%;
+  height: 20px;
+  outline: 2px solid white;
+  position: sticky;
+  bottom: 0;
+  background-color: black;
+}
+
+#innerAchievementProgressBar {
+  height: 100%;
+  background-color: white;
+  animation: achievementBarAnim 2.5s cubic-bezier(.75,0,.5,1) 1 forwards;
+}
+
+@keyframes achievementBarAnim {
+  from {
+    width: 0;
+  }
+}
+
+#achievementProgressBarText {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  line-height: 1;
+  top: 0;
+  mix-blend-mode: difference;
+}
+
+
+
+#deathScreenContainer, #pauseContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  cursor: default;
+}
+
+#deathScreen, #pause {
+  z-index: 2;
+  background-color: rgb(0, 0, 0, 0.75);
+  outline: 3px solid white;
+  backdrop-filter: blur(10px);
+  width: 100%;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#pause {
+  gap: 25px;
+}
+
+#pauseContainer {
+  display: none;
+}
+
+#deathScreen {
+  transition: height ease-in-out 1s, opacity ease-in-out 1s;
+  height: 0;
+  opacity: 0;
+}
+
+#deathVideo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100dvw !important;
+  /* height: 100dvh; */
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity ease-in-out 1s;
+}
+
+#characterInfo {
+  display: flex;
+  justify-content: space-between;
+  width: 500px;
+  outline: 2px solid white;
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 5px;
+  line-height: 1.1;
+  position: relative;
+}
+
+#characterInfoTitle {
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+#characterInfoImg {
+  width: 100px;
+  height: 100px;
+}
+
+#characterTagContainer {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  display: flex;
+  gap: 5px;
+}
+
+#characterTag, #characterTauntable {
+  height: 25px;
+  padding-left: 5px;
+  padding-right: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  border-radius: 12.5px;
+}
+
+#characterTauntable {
+  outline: 2px solid rgb(255, 255, 255, 0.25);
+  background-color: rgb(255, 255, 255, 0.1);
+}
+
+#characterInfoID {
+  font-size: 0.75em;
+  color: grey;
+}
+
+#characterSelectContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  width: 561px;
+  max-height: 300px;
+  overflow: scroll;
+  scrollbar-width: none;
+  padding: 5px;
+  outline: 2px solid white;
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+.characterSelect {
+  width: 54px;
+  padding: 5px;
+  cursor: pointer;
+  display: flex;
+  outline: 2px solid white;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  font-weight: 700;
+}
+
+#characterCodeContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(10px);
+}
+
+#characterCode {
+  outline: 2px solid white;
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 5px;
+  max-width: 250px;
+  line-height: 1.1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#characterCode span {
+  width: 100%;
+}
+
+#characterCode span:nth-child(1) {
+  font-size: 1.1em;
+  font-weight: 700;
+}
+
+#characterCode input {
+  background-color: transparent;
+  outline: 2px solid white;
+  font-family: 'Roboto Mono', monospace;
+  border: none;
+}
+
+#innerCredits {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  background-color: rgb(0, 0, 0, 0.25);
+  filter: drop-shadow(0px 0px 50px black);
+}
+
+#bgCredits {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
+}
+
+.creditsImg {
+  position: absolute;
+  max-width: 350px;
+  max-height: 150px;
+  box-shadow: 0px 0px 10px black;
+  opacity: 0.75;
+  image-rendering: unset;
+  transition: top linear 10s, opacity ease-in-out 1s;
+  /* animation: fnuy 10s linear infinite forwards; */
+}
+
+coolLine {
+  height: 2px;
+  width: 100%;
+  background-color: rgb(255, 255, 255, 0.5);
+}
+
+.htpBox {
+  padding: 5px;
+  height: fit-content;
+  outline: 2px solid white;
+  list-style: 1;
+  backdrop-filter: blur(10px);
+}
+
+.htpBoxHeading {
+  font-size: 1.1em;
+  font-weight: 700;
+}
+
+.control {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  gap: 5px;
+}
+
+.control line {
+  height: 1px;
+  width: 100%;
+  background-color: rgb(255, 255, 255, 0.5);
+}
+
+.key {
+  font-weight: 700;
+  border: 2px solid white;
+  height: 25px;
+  min-width: 15px;
+  /* width: fit-content; */
+  padding: 0px 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.htpTableContainer {
+  display: flex;
+}
+
+.htpTableColumn {
+  display: flex;
+  flex-direction: column;
+  min-width: 100px;
+}
+
+.htpTableColumn div {
+  padding: 0px 10px;
+}
+
+.htpTableColumn div:nth-child(odd) {
+  background-color: rgb(255, 255, 255, 0.075);
+}
+
+/* CHANGELOGS */
+
+#changelogContainer {
+  outline: 2px solid white;
+  display: flex;
+  flex-direction: column;
+  width: 750px;
+  height: 500px;
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+}
+
+#innerChangelog {
+  padding: 5px;
+  height: 100%;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+
+#changelogFooterContainer {
+  border-top: 2px solid white;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+#changelogFooterContainer button {
+  width: 25px;
+  height: 25px;
+}
+
+#changelogVersionNumber {
+  font-size: 1.25em;
+  font-weight: 700;
+  width: 250px;
+  text-align: center;
+}
+
+/* SETTINGS */
+
+#settingsContainer {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+}
+
+#settingsTabs {
+  display: flex;
+  gap: 4px; 
+}
+
+.settingTab {
+  cursor: pointer;
+  outline: 2px solid white;
+  padding: 0px 5px;
+  border-radius: 5px 5px 0px 0px;
+}
+
+.settingTab[selected="false"] {
+  color: grey;
+  outline: 2px solid grey;
+}
+
+#innerSettings {
+  outline: 2px solid white;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  padding: 5px;
+  height: 400px;
+}
+
+.genericSettingsMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.settingContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.settingInfo {
+  line-height: 1;
+}
+
+.settingInfo span {
+  font-weight: 600;
+}
+
+.settingInfo em {
+  color: grey;
+}
+
+/* STATS */
+
+#statsUpgradesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 400px;
+  max-height: 200px;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0), 35%, rgba(0, 0, 0, 1));
+}
+
+.statsUpgrade {
+  display: flex;
+  gap: 5px;
+  height: 25px;
+}
+
+.statsUpgradeImg {
+  aspect-ratio: 1 / 1;
+}
+
+.statsUpgradeBar {
+  height: 100%;
+  /* width: 100%; */
+  background-color: white;
+  display: flex;
+  align-items: center;
+}
+
+.statsUpgradeBar span {
+  color: black;
+  font-weight: 700;
+  margin-left: 5px;
+}
+
+#statsUpgradeShowMore {
+  color: grey;
+  cursor: pointer;
+}

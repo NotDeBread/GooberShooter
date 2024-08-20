@@ -1,0 +1,21 @@
+{
+    "name": "Goober Shooter",
+    "short_name": "GooberShooter",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#fff",
+    "theme_color": "rgb(0, 0, 0)",
+    "description": "Funny Shooting Game.",
+    "icons": [
+        {
+            "src": "media/favicon.webp",
+            "sizes": "144x144",
+            "type": "image/webp"
+        },
+        {
+            "src": "media/faviconSmall.webp",
+            "sizes": "24x24",
+            "type": "image/webp"
+        }
+    ]
+}
