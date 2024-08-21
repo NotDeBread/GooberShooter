@@ -367,3 +367,5 @@ Enemy12: Has a defensive poison field around them, and shoots bullets spawning p
 -Parried bullets no longer collide with spawning enemies.
 
 {newLog}
+# v1.00b
+-Fixed some texture loading issues.
