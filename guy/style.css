@@ -1,0 +1,23 @@
+#guy, #gun {
+    image-rendering: pixelated;
+    position: absolute;
+    scale: 10;
+}
+#gun {
+    top: 4in;
+    left: 6in;
+}
+.bullet {
+    image-rendering: pixelated;
+    position: absolute;
+    scale: 10;
+}
+#DynamicText, #DynamicText2 {
+    font-size: 12pt;
+    font-family: monospace;
+    color: yellow;
+}
+body{
+    overflow: hidden;
+    background-color: black;
+}

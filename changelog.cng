@@ -367,5 +367,33 @@ Enemy12: Has a defensive poison field around them, and shoots bullets spawning p
 -Parried bullets no longer collide with spawning enemies.
 
 {newLog}
+
 # v1.00b
 -Fixed some texture loading issues.
+
+{newLog}
+
+# v1.01
+-New characters:
+    -Guy
+
+-New achievements:
+    -Card Collector: Collect all card upgrades.
+
+-New upgrades:
+    -Magnetic Ammo:
+        Bullets become attracted towards enemies.
+        -20% Max Ammo
+
+**UI/MENU**
+-Redid statistics menu.
+    -Activity section.
+    -Account section.
+    -Account creation date is now part of player data.
+    -Challenges completed, melee kills, and total XP are now tracked.
+
+**SMALL STUFF**
+-Leveling up no requires less XP.
+
+**BUG FIXES**
+-Potentially fixed achievement texture loading.

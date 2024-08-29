@@ -167,7 +167,7 @@ const achievements = {
     },
     closeCall: {
         name: 'Close Call',
-        desc: 'Have 0 health, but not die.',
+        desc: 'Have 0 health, but don\'t die.',
         unlocked: false,
         secret: false,
     },
@@ -212,6 +212,12 @@ const achievements = {
     gameOver: {
         name: 'Game Over',
         desc: 'Die for the first time.',
+        unlocked: false,
+        secret: false,
+    },
+    cardCollector: {
+        name: 'Card Collector',
+        desc: 'Collet all card upgrades.',
         unlocked: false,
         secret: false,
     },
@@ -272,7 +278,8 @@ function createAchNoti(ach) {
     notiImg.style.display = 'none'
     notiImg.style.opacity = 0
     notiImg.style.transition = 'opacity ease-in-out 250ms'
-    notiImg.src = `media/achievements/${ach.name.toLowerCase().replaceAll(' ', '').replaceAll('-', 's')}.png`
+    notiImg.src = `media/achievements/${ach.name.replaceAll(' ','').replaceAll('-','S')}.png`
+    // console.log(`media/achievements/${ach.name.replaceAll(' ','').replaceAll('-','S')}.png`)
     noti.append(notiImg)
 
     const notiSection2 = document.createElement('div')
@@ -331,6 +338,9 @@ function getAchievement(ach) {
         if(achievements[ach].run) {
             achievements[ach].run()
         }
+
+        data.stats.activity.push([`& completed the ${achievements[ach].name} achievement.`, Date.now()])
+
         saveData()
     }
 }
@@ -338,8 +348,7 @@ function getAchievement(ach) {
 function getAllAchievements() {
     for(const achievement in achievements) {
         if(!achievements[achievement].unlocked) {
-            createAchNoti(achievements[achievement])
-            achievements[achievement].unlocked = true
+            getAchievement(achievement)
         }
     }
 }

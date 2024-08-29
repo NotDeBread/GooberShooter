@@ -51,6 +51,7 @@ function resetPlayer() {
             fireDamage: 0,
             ricochetAmount: 0,
             grow: 0,
+            magnet: 0,
             ricochetMultiplier: 1,
         },
     
@@ -723,29 +724,35 @@ document.addEventListener('keyup', (ev) => {
 
 //God please kill me
 function updatePlayerDirection() {
-    if(!player.taunting && doge('playerTextureContainer').children.length > 0) {
-        const character = characters[data.selectedCharacter].name.toLowerCase().replaceAll(' ', '_')
-    
-        doge('playerTextureContainer').innerHTML = ''
-        if (cursor.pos[1] < player.pos[1] && cursor.pos[0] < player.pos[0]) {
-            doge('playerTextureContainer').append(getImage(`media/characters/${character}-upleft.png`))
-        } else if (cursor.pos[1] < player.pos[1] && cursor.pos[0] > player.pos[0] + playerD.offsetWidth) {
-            doge('playerTextureContainer').append(getImage(`media/characters/${character}-upright.png`))
-        } else if (cursor.pos[1] > player.pos[1] + playerD.offsetHeight && cursor.pos[0] < player.pos[0]) {
-            doge('playerTextureContainer').append(getImage(`media/characters/${character}-downleft.png`))
-        } else if (cursor.pos[1] > player.pos[1] + playerD.offsetHeight && cursor.pos[0] > player.pos[0] + playerD.offsetWidth) {
-            doge('playerTextureContainer').append(getImage(`media/characters/${character}-downright.png`))
-        } else if (cursor.pos[1] < player.pos[1]) {
-            doge('playerTextureContainer').append(getImage(`media/characters/${character}-up.png`))
-        } else if (cursor.pos[0] < player.pos[0]) {
-            doge('playerTextureContainer').append(getImage(`media/characters/${character}-left.png`))
-        } else if (cursor.pos[0] > player.pos[0] + playerD.offsetWidth) {
-            doge('playerTextureContainer').append(getImage(`media/characters/${character}-right.png`))
-        } else if (cursor.pos[1] > player.pos[1] + playerD.offsetHeight) {
-            doge('playerTextureContainer').append(getImage(`media/characters/${character}-down.png`))
-        } else {
-            doge('playerTextureContainer').append(getImage(`media/characters/${character}-normal.png`))
+    if(!characters[data.selectedCharacter].noLookingDirections) {
+        if(!player.taunting && doge('playerTextureContainer').children.length > 0) {
+            const character = characters[data.selectedCharacter].name.toLowerCase().replaceAll(' ', '_')
+        
+            doge('playerTextureContainer').innerHTML = ''
+            if (cursor.pos[1] < player.pos[1] && cursor.pos[0] < player.pos[0]) {
+                doge('playerTextureContainer').append(getImage(`media/characters/${character}-upleft.png`))
+            } else if (cursor.pos[1] < player.pos[1] && cursor.pos[0] > player.pos[0] + playerD.offsetWidth) {
+                doge('playerTextureContainer').append(getImage(`media/characters/${character}-upright.png`))
+            } else if (cursor.pos[1] > player.pos[1] + playerD.offsetHeight && cursor.pos[0] < player.pos[0]) {
+                doge('playerTextureContainer').append(getImage(`media/characters/${character}-downleft.png`))
+            } else if (cursor.pos[1] > player.pos[1] + playerD.offsetHeight && cursor.pos[0] > player.pos[0] + playerD.offsetWidth) {
+                doge('playerTextureContainer').append(getImage(`media/characters/${character}-downright.png`))
+            } else if (cursor.pos[1] < player.pos[1]) {
+                doge('playerTextureContainer').append(getImage(`media/characters/${character}-up.png`))
+            } else if (cursor.pos[0] < player.pos[0]) {
+                doge('playerTextureContainer').append(getImage(`media/characters/${character}-left.png`))
+            } else if (cursor.pos[0] > player.pos[0] + playerD.offsetWidth) {
+                doge('playerTextureContainer').append(getImage(`media/characters/${character}-right.png`))
+            } else if (cursor.pos[1] > player.pos[1] + playerD.offsetHeight) {
+                doge('playerTextureContainer').append(getImage(`media/characters/${character}-down.png`))
+            } else {
+                doge('playerTextureContainer').append(getImage(`media/characters/${character}-normal.png`))
+            }
         }
+    } else {
+        const character = characters[data.selectedCharacter].name.toLowerCase().replaceAll(' ', '_')
+        doge('playerTextureContainer').innerHTML = ''
+        doge('playerTextureContainer').append(getImage(`media/characters/${character}-normal.png`))
     }
 }
 
@@ -1108,10 +1115,16 @@ document.addEventListener('mousedown', ev => {
                                 bullet.crit = false
                             } 
     
-                            // if(player.gun.bulletSize >= 20) {
-                            //     bullet.style.background = 'url(media/bulletBig.png)'
-                            //     bullet.style.backgroundSize = 'contain'
-                            // }
+                            if(!characters[data.selectedCharacter].customBulletTexture) {
+                                if(player.gun.bulletSize >= 20) {
+                                    bullet.style.background = 'url(media/bulletBig.png)'
+                                    bullet.style.backgroundSize = 'contain'
+                                }
+                            } else {
+                                bullet.style.background = `url(${characters[data.selectedCharacter].customBulletTexture})`
+                                bullet.style.imageRendering = 'pixelated'
+                                bullet.style.backgroundSize = 'contain'
+                            }
                             
                             bullet.ricochet = player.gun.ricochetAmount
                             bullet.pos = [(gunD.pos[0] + gunD.translateInt[0] + gunD.offsetWidth / 2) - player.gun.bulletSize / 2, (gunD.pos[1] + gunD.offsetHeight / 2) - player.gun.bulletSize / 2]
@@ -1125,6 +1138,7 @@ document.addEventListener('mousedown', ev => {
                             bullet.style.rotate = bullet.angle + 'rad'
                             bullet.style.width = player.gun.bulletSize+'px'
                             bullet.timesRicocheted = 0
+                            let magnetStrength = player.gun.magnet * 2
                         
                             //BULLET MOVEMENT INTERVAL
                             bullet.interval = setInterval(() => {
@@ -1136,6 +1150,31 @@ document.addEventListener('mousedown', ev => {
                                     bullet.style.top = bullet.pos[1]+'px'
                     
                                     bullet.damage += player.gun.grow
+
+                                    //MAGNET
+                                    if(player.gun.magnet) {
+                                        let lowestDistance = 10000000
+                                        let lowestEnemy
+                                        const bulletCenterPos = [bullet.pos[0] + bullet.offsetWidth / 2, bullet.pos[1] + bullet.offsetHeight / 2]
+                                        game.querySelectorAll('enemy').forEach(enemy => {
+                                            // enemy.style.outline = 'none'
+                                            const enemyCenterPos = [enemy.pos[0] + enemy.offsetWidth / 2, enemy.pos[1] + enemy.offsetHeight / 2]
+                                            const dis = Math.hypot(bulletCenterPos[0] - enemyCenterPos[0], bulletCenterPos[1] - enemyCenterPos[1])
+                                            if(dis < lowestDistance) {
+                                                lowestDistance = dis
+                                                lowestEnemy = enemy
+                                            }
+                                        })
+                                        if(lowestEnemy) {
+                                            // lowestEnemy.style.outline = `5px solid red`
+                                            
+                                            const angleTowardsLowestEnemy = Math.atan2(lowestEnemy.pos[1] + lowestEnemy.offsetHeight / 2 - bulletCenterPos[1], lowestEnemy.pos[0] + lowestEnemy.offsetWidth / 2 - bulletCenterPos[0])
+                                            bullet.pos[0] += magnetStrength * Math.cos(angleTowardsLowestEnemy)
+                                            bullet.pos[1] += magnetStrength * Math.sin(angleTowardsLowestEnemy)
+                                            bullet.style.rotate = angleTowardsLowestEnemy + 'rad'
+                                            magnetStrength += 0.025
+                                        }
+                                    } 
 
                                     //CORRECT BULLET POSITION
                                     // if(bullet.pos[0] < 0) {bullet.pos[0] = 0; console.log('bulletX0 corrected!')}
@@ -1323,7 +1362,7 @@ document.addEventListener('mousedown', ev => {
         }
 
         //BLOCK
-        if(ev.button === 2) {playerD.block()}
+        if(ev.button === 2) playerD.block()
     }
 
 })
@@ -1428,6 +1467,11 @@ function damagePlayer(amount, affectCombo = true) {
         //DEATH
         if(player.health <= 0 && !data.settings.sandbox) {
         
+            if(player.points > data.stats.highestScore) {
+                data.stats.highestScore = player.points
+                data.stats.activity.push([`& achieved a new high score of ${DeBread.round(player.points)}.`, Date.now()])
+            }
+
             let deathDelay = 0
             
             if(DeBread.randomNum(0, 25) === 0) {
@@ -1563,9 +1607,6 @@ function getPoints(base, styleText, real = true) { //This might just be the most
         if(data.settings.sandbox) {real = false}
         if(real) {
             data.stats.totalScore += amount
-            if(player.points > data.stats.highestScore) {
-                data.stats.highestScore = player.points
-            }
         }
     }
     if(player.points >= 1000000000) {
@@ -3163,6 +3204,14 @@ const upgrades = [
         action: () => {player.gun.fireDamage += 0.1; player.gun.damage *= 0.8}
     },
     {   
+        name: 'Magnetic Ammo',
+        description: `
+            <span>Bullets become attracted towards enemies.</span><br>
+            <span><b>-20%</b> Max Ammo</span>
+        `,
+        action: () => {player.gun.magnet++; player.gun.maxAmmo = DeBread.round(player.gun.maxAmmo *= 0.8)}
+    },
+    {   
         name: 'Black Hole',
         description: `
             <span>Compresses half damage in your magazine into one bullet.</span><br>
@@ -3677,6 +3726,34 @@ function openShop(upgradeAmount, progressWave = true) {
     
                             doge('shopInventory').classList.remove('shopInventoryAnim')
                         }, 2000);
+
+
+                        //Check for achievement
+                        const cardUpgrades = {
+                            ammunition: false,
+                            damage: false,
+                            block: false,
+                            health: false,
+                            defense: false,
+                            time: false,
+                        }
+                        for(const key in data.stats.upgrades) {
+                            if(key.toLowerCase().replace(' card','') === 'ammunition') cardUpgrades.ammunition = true
+                            if(key.toLowerCase().replace(' card','') === 'damage') cardUpgrades.damage = true
+                            if(key.toLowerCase().replace(' card','') === 'block') cardUpgrades.block = true
+                            if(key.toLowerCase().replace(' card','') === 'health') cardUpgrades.health = true
+                            if(key.toLowerCase().replace(' card','') === 'defense') cardUpgrades.defense = true
+                            if(key.toLowerCase().replace(' card','') === 'time') cardUpgrades.time = true
+                        }
+                        let achievementPassed = true
+                        for(const key in cardUpgrades) {
+                            if(!cardUpgrades[key]) {
+                                achievementPassed = false
+                            }
+                        }
+                        if(achievementPassed) {
+                            getAchievement('cardCollector')
+                        }
                     }, 500);
                 }
             }
@@ -3852,6 +3929,7 @@ function increaseChallengeProgress(unit, amount) {
                     if(!data.challenges[key].completed) {
                         data.challenges[key].completed = true
                         createChallengeCompleteNoti(data.challenges[key])
+                        data.stats.challengesCompleted++
                         setTimeout(() => {
                             getXP(data.challenges[key].reward)
                         }, 2000);

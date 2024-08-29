@@ -11,7 +11,7 @@ for(const char in titleText) {
     }
 
     letter.style.animation = `charWave 2s ease-in-out -${char * 50}ms infinite forwards`
-    doge('titleScreenTitle').append(letter)
+    doge('mainTitleScreenTitle').append(letter)
 }
 
 //MENU SOUNDS
@@ -208,7 +208,7 @@ function openMenu(menu) {
 
                     div.innerHTML = `
                     <div class="achievement">
-                        <img src="media/achievements/${achievement}.png">
+                        <img src="media/achievements/${achievements[achievement].name.replaceAll(' ','').replaceAll('-','S')}.png">
                         <div class="achievementText">
                             <span>${achievements[achievement].name}</span><br>
                             <span>${achievementDesc}</span>
@@ -260,82 +260,92 @@ function openMenu(menu) {
                 document.title = `Goober Shooter - Changelogs`        
             }
 
-            if(menu === 'stats') {
-                //RENDER UPGRADE GRAPH
+            if(menu === 'stats') {            
+                document.title = `Goober Shooter - Stats`
+                let name = data.displayName
+                if(data.displayName === '') {
+                    name = 'Player'
+                }
+                doge('statMenuTitle').innerText = `${name}'s STATISTICS`
+                doge('statDisplayName').innerText = name
 
-                doge('statsUpgradesContainer').innerHTML = ''
-                const sortedUpgrades = Object.entries(data.stats.upgrades).sort((a, b) => b[1] - a[1])
-                
-                if(sortedUpgrades.length > 0) {
-                    const highestUpgrade = sortedUpgrades[0][1]
-                    for(upgrade in sortedUpgrades) {
-                        const upgradeBar = document.createElement('div')
-                        upgradeBar.classList.add('statsUpgrade')
-                        upgradeBar.innerHTML = `
-                        <img class="statsUpgradeImg" src="media/upgrades/${sortedUpgrades[upgrade][0].replace(' ', '_')}.png">
-                        `
-    
-                        const innerUpgradeBar = document.createElement('div')
-                        innerUpgradeBar.classList.add('statsUpgradeBar')
-                        innerUpgradeBar.style.width = (sortedUpgrades[upgrade][1] / highestUpgrade) * 100 + '%'
-                        
-                        upgradeBar.append(innerUpgradeBar)
-    
-                        if((sortedUpgrades[upgrade][1] / highestUpgrade) * 100 > 5) {
-                            innerUpgradeBar.innerHTML = `<span>${sortedUpgrades[upgrade][1]}</span>`
+                doge('statEnemiesKilled').innerText = data.stats.enemiesKilled
+                doge('statMeleeKills').innerText = data.stats.enemiesKilledByMelee
+                doge('statTimesParried').innerText = data.stats.timesParried
+                doge('statHighestWave').innerText = data.stats.highestWaveReached
+                doge('statHighScore').innerText = formatNumber(DeBread.round(data.stats.highestScore))
+                doge('statTotalScore').innerText = formatNumber(DeBread.round(data.stats.totalScore))
+                doge('statTotalXP').innerText = formatNumber(DeBread.round(data.xp))
+                doge('statChallengesCompleted').innerText = data.stats.challengesCompleted
+                let totalUpgrades = 0
+                for(const key in data.stats.upgrades) {
+                    totalUpgrades += data.stats.upgrades[key]
+                }
+                doge('statUpgradesBought').innerText = totalUpgrades
+
+                //Upgrade Stats
+                if(Object.keys(data.stats.upgrades).length > 0) {
+                    doge('upgradesBoughtContainer').innerHTML = ''
+                    const sortedUpgrades = Object.entries(data.stats.upgrades).sort((a, b) => b[1] - a[1])
+                    for(const key in sortedUpgrades) {
+                        const statDiv = document.createElement('div')
+                        statDiv.classList.add('upgradesBoughtUpgrade')
+                        if(sortedUpgrades[key][1] / sortedUpgrades[0][1] * 100 > 10) {
+                            statDiv.innerHTML = `
+                                <img src="media/upgrades/${sortedUpgrades[key][0].replaceAll(' ','_')}.png">
+                                <div class="upgradesBoughtBar">
+                                    <div class="upgradesBoughtInnerBar" style="width: ${sortedUpgrades[key][1] / sortedUpgrades[0][1] * 100}%;">
+                                        <span>${sortedUpgrades[key][1]}</span>
+                                    </div>
+                                </div>
+                            `
                         } else {
-                            const upgradeBarNum = document.createElement('span')
-                            upgradeBarNum.innerText = sortedUpgrades[upgrade][1]
-                            if(upgradeBarNum) {
-                                upgradeBar.append(upgradeBarNum)
-                            }
+                            statDiv.innerHTML = `
+                            <img src="media/upgrades/${sortedUpgrades[key][0].replaceAll(' ','_')}.png">
+                            <div class="upgradesBoughtBar">
+                                <div class="upgradesBoughtInnerBar" style="width: ${sortedUpgrades[key][1] / sortedUpgrades[0][1] * 100}%;"></div>
+                                <span>${sortedUpgrades[key][1]}</span>
+                            </div>
+                        `
                         }
-    
-    
-                        doge('statsUpgradesContainer').append(upgradeBar)
-                    }
-
-                    if(sortedUpgrades.length > 6) {
-                        doge('statsUpgradesContainer').style.maskImage = 'linear-gradient(to top, rgba(0, 0, 0, 0), 35%, rgba(0, 0, 0, 1))'
-                        doge('statsUpgradeShowMore').style.display = 'unset'
-                    } else {
-                        doge('statsUpgradesContainer').style.maskImage = 'none'
+                        doge('upgradesBoughtContainer').append(statDiv)
                     }
                 } else {
-                    const span = document.createElement('span')
-                    span.innerText = 'You haven\'t bought any upgrades yet!'
-                    doge('statsUpgradesContainer').append(span)
-                    doge('statsUpgradeShowMore').style.display = 'none'
-                    doge('statsUpgradesContainer').style.maskImage = 'none'
+                    doge('upgradesBoughtContainer').innerHTML = 'You haven\'t bought any upgrades yet!'
                 }
 
-                doge('statsUpgradeShowMore').onclick = () => {
-                    if(doge('statsUpgradeShowMore').innerText === 'Show more') {
-                        doge('statsUpgradeShowMore').innerText = 'Show less'
-                        doge('statsUpgradesContainer').style.maxHeight = '500px'
-                        doge('statsUpgradesContainer').style.overflowY = 'scroll'
-                        doge('statsUpgradesContainer').style.maskImage = 'none'
-                    } else {
-                        doge('statsUpgradeShowMore').innerText = 'Show more'
-                        doge('statsUpgradesContainer').style.maxHeight = '200px'
-                        doge('statsUpgradesContainer').scrollTo(0, 0)
-                        doge('statsUpgradesContainer').style.overflowY = 'hidden'
-                        doge('statsUpgradesContainer').style.maskImage = 'linear-gradient(to top, rgba(0, 0, 0, 0), 35%, rgba(0, 0, 0, 1))'
-                    }
-                }
-
-                doge('statMenuEnemiesKilled').innerText = `Enemies Killed: ${data.stats.enemiesKilled}`
-                doge('statMenuTimesParried').innerText = `Times Parried: ${data.stats.timesParried}`
-                doge('statMenuHighestWave').innerText = `Highest Wave: ${data.stats.highestWaveReached}`
-                doge('statMenuHighScore').innerText = `Highest Score: ${formatNumber(DeBread.round(data.stats.highestScore))}`
-                doge('statMenuTotalScore').innerText = `Total Score: ${formatNumber(DeBread.round(data.stats.totalScore))}`
-                let totalUpgrades = 0
-                for(const upgrade in data.stats.upgrades) {
-                    totalUpgrades += data.stats.upgrades[upgrade]
-                }
-                doge('statMenuUpgradesBought').innerText = `Upgrades Bought: ${totalUpgrades}`
+                //Profile
+                doge('statProfileImg').src = `media/characters/${data.selectedProfileImg}`
+                doge('statLevel').innerText = `Level ${data.level}`
+                const currentLevelXP = getCompoundXP(data.level)
+                const nextLevelXP = getCompoundXP(data.level + 1)
+                const xpPercentage = (data.xp - currentLevelXP) / (nextLevelXP - currentLevelXP) * 100
             
-                document.title = `Goober Shooter - Stats`
+                doge('statXPProgress').innerText = `${DeBread.round(data.xp - currentLevelXP).toLocaleString()} / ${DeBread.round(nextLevelXP - currentLevelXP).toLocaleString()} XP`
+                doge('statInnerLevelBar').style.width = xpPercentage + '%'
+                
+                const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                const now = new Date(data.accountCreationDate);
+                doge('statCreationDate').innerText = `Account created ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`
+
+                //Activity
+
+                doge('statActivityContainer').innerHTML = ''
+                if(data.stats.activity.length > 0) {
+                    for(const key in data.stats.activity) {
+                        const date = new Date(data.stats.activity[key][1])
+                        const div = document.createElement('div')
+                        div.classList.add('statActivity')
+                        div.innerHTML = `
+                            <span>${data.stats.activity[key][0].replaceAll('&', name)}</span>
+                            <em style="font-size: 0.75em; color: grey;">${date.getMonth()}/${date.getDay()}/${date.getFullYear()}</em>
+                        `
+                        doge('statActivityContainer').append(div)
+                    }
+                    doge('statActivityContainer').scrollTop = -9999999
+                } else {
+                    doge('statActivityContainer').innerHTML = 'You haven\'t done anything notable yet!'
+                }
             }
 
             if(menu !== 'play') {
@@ -349,9 +359,9 @@ function openMenu(menu) {
     doge('deathVideo').style.opacity = 0
 }
 
-// data.settings.sandbox = true
+data.settings.sandbox = true
 // openMenu('achievements')
-// openMenu('settings')
+openMenu('play')
 
 function openProfileImgPicker() {
     doge('profileImgPickerContainer').style.display = 'flex'
@@ -391,14 +401,14 @@ function updateMenuProfile() {
         doge('profileLevelBadge').title = `Level Badge ${Math.floor(data.level / 10)}`
     } else {
         doge('profileLevelBadge').src = `media/levelBadges/10.png`
-        doge('profileLevelBadge').title = `Level Badge 10+}`
+        doge('profileLevelBadge').title = `Level Badge 10+`
     }
     doge('profileLevel').innerText = `Level ${data.level}`
 
-    let currentLevelXP = getCompoundXP(data.level)
-    let nextLevelXP = getCompoundXP(data.level + 1)
+    const currentLevelXP = getCompoundXP(data.level)
+    const nextLevelXP = getCompoundXP(data.level + 1)
 
-    let xpPercentage = (data.xp - currentLevelXP) / (nextLevelXP - currentLevelXP) * 100
+    const xpPercentage = (data.xp - currentLevelXP) / (nextLevelXP - currentLevelXP) * 100
     doge('profileLevelProgress').innerText = `${DeBread.round(data.xp - currentLevelXP).toLocaleString()} / ${DeBread.round(nextLevelXP - currentLevelXP).toLocaleString()} XP`
     doge('innerProfileLevelBar').style.width = xpPercentage + '%'
 } updateMenuProfile()
@@ -458,14 +468,15 @@ function changeMusic(track) {
     currentTrack = track
 }
 
-//With the help of chatGPT, i didnt blow my head off with a sawed off shotgun!!!!! :DD
 const changelogs = [
     'Initial Release',
     'Playtest v0.02',
     'Playtest v0.03',
     'Playtest v0.04',
     'Playtest v0.05',
-    'v1.00'
+    'v1.00',
+    'v1.00b',
+    'v1.01',
 ]
 let selectedChangelog = changelogs.length - 1
 function renderChangelog(key) {

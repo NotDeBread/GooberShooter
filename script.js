@@ -5,6 +5,7 @@ const defaultData = {
     dev: false,
     level: 0,
     xp: 0,
+    accountCreationDate: Date.now(),
     
     stats: {
         
@@ -14,8 +15,10 @@ const defaultData = {
         highestWaveReached: 0,
         highestScore: 0,
         totalScore: 0,
+        challengesCompleted: 0,
 
-        upgrades: {}
+        upgrades: {},
+        activity: [],
     },
 
     challenges: [],

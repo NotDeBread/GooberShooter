@@ -142,6 +142,8 @@ const characters = {
         credits: true,
         pack: 'goober',
         taunts: 5,
+        credits: true,
+        code: 'cookiesandcream'
     },
     henry: {
         unlocked: false,
@@ -286,6 +288,15 @@ const characters = {
         requirement: 'Complete the \'Show Off\' achievement to unlock this character.',
         pack: 'misc',
         taunts: 1,
+    },
+    guy: {
+        unlocked: false,
+        name: 'Guy',
+        desc: 'Guy',
+        pack: 'misc',
+        taunts: 1,
+        noLookingDirections: true,
+        customBulletTexture: 'media/guyBullet.png'
     },
     // template: {
     //     unlocked: true,
@@ -470,7 +481,7 @@ function fartSiteCheck() {
     if(doge('characterInfoImg').src.includes('media/characters/plonk-normal.png')) {
         doge('characterInfoImg').onclick = () => {
             getAchievement('funny')
-            window.open('/fart/', '_self')
+            window.open('GooberShooter/fart/', '_self')
         }
         doge('characterInfoImg').style.cursor = 'pointer'
     } else {
@@ -483,6 +494,7 @@ function unlockCharacter(character, silent) {
     if(!character.unlocked) {
         character.unlocked = true
         data.unlockedCharacters.push(character.name.replaceAll(' ','_').toLowerCase())
+        data.stats.activity.push([`& unlocked ${character.name}.`, Date.now()])
         if(!silent) {
             createNoti(`media/characters/${character.name.toLowerCase().replaceAll(' ', '_')}-normal.png`, `${character.name} Unlocked!`, 'You can change your character in the main menu.')
             saveData()
@@ -534,8 +546,12 @@ const lookingDirections = [
     'upleft'
 ]
 for(const character in characters) {
-    for(direction in lookingDirections) {
-        imagesToLoad.characters.push(`media/characters/${characters[character].name.toLowerCase().replaceAll(' ', '_')}-${lookingDirections[direction]}.png`)
+    if(!characters[character].noLookingDirections) {
+        for(direction in lookingDirections) {
+            imagesToLoad.characters.push(`media/characters/${characters[character].name.toLowerCase().replaceAll(' ', '_')}-${lookingDirections[direction]}.png`)
+        }
+    } else {
+        imagesToLoad.characters.push(`media/characters/${characters[character].name.toLowerCase().replaceAll(' ', '_')}-normal.png`)
     }
     if(characters[character].taunts) {
         for(let i = 1; i < characters[character].taunts + 1; i++) {

@@ -1,6 +1,7 @@
 const button = document.getElementById("buttonMain");
 const buttonImg = document.getElementById("buttonImg");
 const text = document.getElementById("fartText");
+let timesFarded = 0
 
 button.onmousedown = () => {
     buttonImg.src = "sprites/button2.png"
@@ -14,6 +15,11 @@ button.onclick = () => {
     })
 
     shake(text, 10, 5, 5, 250)
+
+    timesFarded++
+    if(timesFarded > 25) {
+        window.open('../guy/')
+    }
 }
 
 button.onmouseup = () => {

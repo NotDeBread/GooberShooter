@@ -154,8 +154,8 @@
             <div id="profileImgPicker"></div>
         </div>
         <div>
-            <div id="titleScreenTitle"></div>
-            <span style="font-size: 15px;">v1.00b</span>
+            <div id="mainTitleScreenTitle"></div>
+            <span style="font-size: 15px;">v1.01</span>
         </div>
         <div class="genericMenuButtons">
             <button class="genericMenuButton" onclick="openMenu('game')">PLAY</button>
@@ -208,7 +208,7 @@
     <!-- GAME SETTINGS MENU -->
 
     <div class="genericMenu" id="menu-game" style="display: none;">
-        <span id="titleScreenTitle">GAME SETTINGS</span>
+        <span class="titleScreenTitle">GAME SETTINGS</span>
         <div id="gameSettingsContainer">
             <section class="gameSettingsSection">
                 <div class="genericMenuButtons">
@@ -255,7 +255,7 @@
     <!-- CHARACTER SELECT MENU -->
 
     <div class="genericMenu" id="menu-character" style="display: none;">
-        <span id="titleScreenTitle">CHARACTER SELECT</span>
+        <span class="titleScreenTitle">CHARACTER SELECT</span>
         <div id="characterInfo">
             <div>
                 <span id="characterInfoTitle">Some character</span>
@@ -338,7 +338,7 @@
     <!-- SETTINGS MENU -->
 
     <div class="genericMenu" id="menu-settings" style="display: none;">
-        <span id="titleScreenTitle">SETTINGS</span>
+        <span class="titleScreenTitle">SETTINGS</span>
         <div id="settingsContainer">
             <div id="settingsTabs">
                 <div class="settingTab" id="settingTab-gameplay" selected="true" onclick="changeSettingTab('gameplay')">Gameplay</div>
@@ -455,7 +455,7 @@
 
     <div class="genericMenu" id="menu-achievements" style="display: none;">
         <div>
-            <span id="titleScreenTitle">ACHIEVEMENTS</span>
+            <span class="titleScreenTitle">ACHIEVEMENTS</span>
         </div>
 
         <div id="achievementsContainer">
@@ -477,31 +477,130 @@
 
     <div class="genericMenu" id="menu-stats" style="display: none;">
         <div>
-            <span id="titleScreenTitle">STATISTICS</span>
+            <span class="titleScreenTitle" id="statMenuTitle">STATISTICS</span>
         </div>
 
-        <div style="display: flex; gap: 25px;">
-            <div class="htpBox" style="height: fit-content;">
-                <span class="htpBoxHeading">Upgrades Bought</span><br>
-                <div id="statsUpgradesContainer">
-                    <div class="statsUpgrade">
-                        <img class="statsUpgradeImg" src="media/upgrades/Adrenaline.png">
-                        <div class="statsUpgradeBar"></div>
+        <div id="statsMenu">
+            <section>
+                <div class="statsBox">
+                    <div class="statsBoxTitle">
+                        <span>Statistics</span>
+                    </div>
+                    <div id="statContainer">
+                        <div class="stat">
+                            <div>
+                                <span>Enemies Killed</span>
+                            </div>
+                            <coolLine></coolLine>
+                            <span id="statEnemiesKilled">-</span>
+                        </div>
+                        <div class="stat">
+                            <div>
+                                <span>Enemies Killed (Melee)</span>
+                            </div>
+                            <coolLine></coolLine>
+                            <span id="statMeleeKills">-</span>
+                        </div>
+                        <div class="stat">
+                            <div>
+                                <span>Times Parried</span>
+                            </div>
+                            <coolLine></coolLine>
+                            <span id="statTimesParried">-</span>
+                        </div>
+                        <div class="stat">
+                            <div>
+                                <span>Highest Wave Reached</span>
+                            </div>
+                            <coolLine></coolLine>
+                            <span id="statHighestWave">-</span>
+                        </div>
+                        <div class="stat">
+                            <div>
+                                <span>Highest Score</span>
+                            </div>
+                            <coolLine></coolLine>
+                            <span id="statHighScore">-</span>
+                        </div>
+                        <div class="stat">
+                            <div>
+                                <span>Total Score</span>
+                            </div>
+                            <coolLine></coolLine>
+                            <span id="statTotalScore">-</span>
+                        </div>
+                        <div class="stat">
+                            <div>
+                                <span>Total XP</span>
+                            </div>
+                            <coolLine></coolLine>
+                            <span id="statTotalXP">-</span>
+                        </div>
+                        <div class="stat">
+                            <div>
+                                <span>Challenges Completed</span>
+                            </div>
+                            <coolLine></coolLine>
+                            <span id="statChallengesCompleted">-</span>
+                        </div>
+                        <div class="stat">
+                            <div>
+                                <span>Upgrades Bought</span>
+                            </div>
+                            <coolLine></coolLine>
+                            <span id="statUpgradesBought">-</span>
+                        </div>
                     </div>
                 </div>
-                <div id="statsUpgradeShowMore">Show more</div>
-            </div>
-            <div class="htpBox" style="min-width: 250px;">
-                <span class="htpBoxHeading">General Stats</span><br>
-                <div style="line-height: 1.1;">
-                    <span id="statMenuEnemiesKilled">Enemies Killed: 0</span><br>
-                    <span id="statMenuTimesParried">Times Parried: 0</span><br>
-                    <span id="statMenuHighestWave">Highest Wave: 0</span><br>
-                    <span id="statMenuHighScore">Highest Score: 0</span><br>
-                    <span id="statMenuTotalScore">Total Score: 0</span><br>
-                    <span id="statMenuUpgradesBought">Upgrades Bought: 0</span>
+                <div class="statsBox">
+                    <div class="statsBoxTitle">
+                        <span>Account</span>
+                    </div>
+                    <div id="statProfile">
+                        <img src="media/characters/debread-taunt5.png" id="statProfileImg">
+                        <div id="statInnerProfile">
+                            <div>
+                                <span id="statDisplayName">Player</span>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span id="statLevel">Level -</span>
+                                    <span id="statXPProgress">- / - XP</span>
+                                </div>
+                                <div id="statLevelBar">
+                                    <div id="statInnerLevelBar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <span id="statCreationDate">Created -</span>
                 </div>
-            </div>
+            </section>
+            <section>
+                <div class="statsBox">
+                    <div class="statsBoxTitle">
+                        <span>Upgrades Bought</span>
+                    </div>
+                    <div id="upgradesBoughtContainer">
+                        <!-- <div class="upgradesBoughtUpgrade">
+                            <img src="media/upgrades/Ammunition_Card.png">
+                            <div class="upgradesBoughtBar">
+                                <div class="upgradesBoughtInnerBar">
+                                    <span>1 gazillion</span>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="statsBox">
+                    <div class="statsBoxTitle">
+                        <span>Activity</span>
+                    </div>
+                    <div id="statActivityContainer">
+
+                    </div>
+                </div>
+            </section>
         </div>
 
         <div class="genericMenuButtons">
@@ -512,7 +611,7 @@
     <!-- HELP MENU -->
 
     <div class="genericMenu" id="menu-help" style="display: none;">
-        <span id="titleScreenTitle">HOW TO PLAY</span>
+        <span class="titleScreenTitle">HOW TO PLAY</span>
         <div style="display: flex; gap: 25px;">
             <div class="htpBox" style="width: 400px;">
                 <span class="htpBoxHeading">Controls</span>
@@ -615,7 +714,7 @@
     <!-- CHANGELOG MENU -->
 
     <div class="genericMenu" id="menu-changelogs" style="display: none;">
-        <span id="titleScreenTitle">CHANGELOGS</span>
+        <span class="titleScreenTitle">CHANGELOGS</span>
         <div id="changelogContainer">
             <div id="innerChangelog">
             </div>
@@ -634,7 +733,7 @@
 
     <div class="genericMenu" id="menu-credits" style="display: none;">
         <div id="innerCredits">
-            <span id="titleScreenTitle">CREDITS</span>
+            <span class="titleScreenTitle">CREDITS</span>
 
             <div style="margin-top: 25px; line-height: 1.1; text-align: center;">
                 <span style="font-size: 0.9em;">Main Developer</span><br>
@@ -642,6 +741,10 @@
                 <br>
                 <span style="margin-top: 250px;font-size: 0.9em;">Additional SFX & Help</span><br>
                 <span style="font-weight: 700; font-size: 1.25em;">RedJive2</span><br>
+                <br>
+                <span style="margin-top: 250px;font-size: 0.9em;">Programming Help</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">RedJive2</span><br>
+                <span style="font-weight: 700; font-size: 1.25em;">ZeanZarzin</span><br>
                 <br>
                 <span style="margin-top: 250px;font-size: 0.9em;">Additional Textures</span><br>
                 <span style="font-weight: 700; font-size: 1.25em;">Plonk</span><br>
@@ -657,9 +760,6 @@
                 <span style="font-weight: 700; font-size: 1.25em;">Hugo</span><br>
                 <span style="font-weight: 700; font-size: 1.25em;">Tobi</span><br>
                 <span style="font-weight: 700; font-size: 1.25em;">Mario</span><br>
-                <br>
-                <span style="margin-top: 250px;font-size: 0.9em;">Additional Glyphs / Icons</span><br>
-                <span style="font-weight: 700; font-size: 1.25em;">tabler.io</span><br>
                 <br>
                 <span style="margin-top: 250px;font-size: 0.9em;">Special Thanks</span><br>
                 <span style="font-weight: 700; font-size: 1.25em;">SwaawS</span><br>
