@@ -397,3 +397,8 @@ Enemy12: Has a defensive poison field around them, and shoots bullets spawning p
 
 **BUG FIXES**
 -Potentially fixed achievement texture loading.
+
+{newLog}
+# v1.01b
+
+-Fixed game loading into sandbox.

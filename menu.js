@@ -359,9 +359,9 @@ function openMenu(menu) {
     doge('deathVideo').style.opacity = 0
 }
 
-data.settings.sandbox = true
+// data.settings.sandbox = true
 // openMenu('achievements')
-openMenu('play')
+// openMenu('play')
 
 function openProfileImgPicker() {
     doge('profileImgPickerContainer').style.display = 'flex'
@@ -477,6 +477,7 @@ const changelogs = [
     'v1.00',
     'v1.00b',
     'v1.01',
+    'v1.01b'
 ]
 let selectedChangelog = changelogs.length - 1
 function renderChangelog(key) {
