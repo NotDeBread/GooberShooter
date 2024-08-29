@@ -368,11 +368,6 @@ Enemy12: Has a defensive poison field around them, and shoots bullets spawning p
 
 {newLog}
 
-# v1.00b
--Fixed some texture loading issues.
-
-{newLog}
-
 # v1.01
 -New characters:
     -Guy
@@ -397,8 +392,3 @@ Enemy12: Has a defensive poison field around them, and shoots bullets spawning p
 
 **BUG FIXES**
 -Potentially fixed achievement texture loading.
-
-{newLog}
-# v1.01b
-
--Fixed game loading into sandbox.
