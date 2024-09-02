@@ -23,6 +23,9 @@ function resetPlayer() {
         style: 50,
         combo: 1,
         comboLoss: 1,
+        pointDistribution: {
+
+        },
     
         health: 100,
         maxHealth: 100,
@@ -405,7 +408,9 @@ playerD.getSaws()
 let currentWaveSize = 10
 const enemyInfo = {
     speedMultiplier: 1,
-    prepareTime: 1500
+    prepareTime: 1500,
+    damageMultiplier: 1,
+    radient: false,
 }
 
 const cursor = {
@@ -800,29 +805,31 @@ function update() {
 
     //DRAW SHOOTING LINE
     gameCanvasCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height)
-    gameCanvasCtx.strokeStyle = 'rgb(255, 255, 255, 0.05)'
-    gameCanvasCtx.lineWidth = player.gun.bulletSize
-    gameCanvasCtx.beginPath()
+    if(player.alive) {
+        gameCanvasCtx.strokeStyle = 'rgb(255, 255, 255, 0.05)'
+        gameCanvasCtx.lineWidth = player.gun.bulletSize
+        gameCanvasCtx.beginPath()
+        
+        const gunCenterX = gunD.pos[0] + gunD.translateInt[0] + gunD.offsetWidth / 2
+        const gunCenterY = gunD.pos[1] + gunD.offsetHeight / 2
     
-    const gunCenterX = gunD.pos[0] + gunD.translateInt[0] + gunD.offsetWidth / 2
-    const gunCenterY = gunD.pos[1] + gunD.offsetHeight / 2
-
-    const directionX = cursor.pos[0] - gunCenterX
-    const directionY = cursor.pos[1] - gunCenterY
-    
-    const extendedEndpointX = gunCenterX + directionX * 100000
-    const extendedEndpointY = gunCenterY + directionY * 100000
-    
-    gameCanvasCtx.moveTo(gunCenterX, gunCenterY)
-    gameCanvasCtx.lineTo(extendedEndpointX, extendedEndpointY)
-    gameCanvasCtx.stroke();
+        const directionX = cursor.pos[0] - gunCenterX
+        const directionY = cursor.pos[1] - gunCenterY
+        
+        const extendedEndpointX = gunCenterX + directionX * 100000
+        const extendedEndpointY = gunCenterY + directionY * 100000
+        
+        gameCanvasCtx.moveTo(gunCenterX, gunCenterY)
+        gameCanvasCtx.lineTo(extendedEndpointX, extendedEndpointY)
+        gameCanvasCtx.stroke()
+    }
 
     gameCanvasCtx.closePath()
     
     //DRAW ENEMY SHOOTING LINES
 
     game.querySelectorAll('enemy').forEach(enemy => {
-        if(enemy.hasGun && !enemy.preparing) {
+        if(enemy.hasGun && !enemy.preparing && player.alive) {
             const enemyColor = DeBread.rgbStringToArray(enemy.color)
 
             gameCanvasCtx.strokeStyle = `rgb(${enemyColor[0]}, ${enemyColor[1]}, ${enemyColor[2]}, 0.05)`
@@ -841,7 +848,7 @@ function update() {
 
     let specialGuys = 0
     game.querySelectorAll('enemy').forEach(enemy => {
-        if(enemy.blockPlayerHeal && !enemy.preparing) {
+        if(enemy.blockPlayerHeal && !enemy.preparing && player.alive) {
             gameCanvasCtx.strokeStyle = `rgb(184, 237, 255, 0.5)`
             gameCanvasCtx.lineWidth = 10
             gameCanvasCtx.beginPath()
@@ -868,7 +875,7 @@ function update() {
 
     //Draw passive damage stuff
     game.querySelectorAll('enemy').forEach(enemy => {
-        if(enemy.dealPassiveDamage && !enemy.preparing) {
+        if(enemy.dealPassiveDamage && !enemy.preparing && player.alive) {
             gameCanvasCtx.strokeStyle = `rgb(161, 47, 100, 0.5)`
             gameCanvasCtx.lineWidth = 10
             gameCanvasCtx.beginPath()
@@ -962,7 +969,7 @@ function update() {
                     [[255, 0, 0], [255, 0, 0]],
                     [[255, 0, 0], [255, 0, 0]]
                 )
-                damagePlayer(bullet.damage)
+                damagePlayer(bullet.damage * enemyInfo.damageMultiplier)
                 updateUI()
 
                 if(bullet.hurtSelf) {
@@ -1004,7 +1011,7 @@ function update() {
                 bullet.pos[1] + bullet.size > game.offsetHeight
             ) {
                 if(bullet.explosionSize) {
-                    createExplosion([bullet.pos[0], bullet.pos[1]], bullet.explosionSize, bullet.damage)
+                    createExplosion([bullet.pos[0], bullet.pos[1]], bullet.explosionSize, bullet.damage * enemyInfo.damageMultiplier)
                 }
                 if(bullet.hurtSelf) {
                     createExplosion([bullet.pos[0], bullet.pos[1]], 250, bullet.damage, true)
@@ -1013,7 +1020,7 @@ function update() {
                     }
                 }
                 if(bullet.poisonFieldTicks) {
-                    createPoisonField([bullet.pos[0], bullet.pos[1]], 100, bullet.poisonFieldTicks, bullet.damage / 5, false)
+                    createPoisonField([bullet.pos[0], bullet.pos[1]], 100, bullet.poisonFieldTicks, (bullet.damage / 5) * enemyInfo.damageMultiplier, false)
                 }
                 DeBread.createParticles(
                     game,
@@ -1037,9 +1044,22 @@ function update() {
 } setInterval(update, 10)
 function updateUI() {
     //HEALTH
+    //get health from DOM
+    let healthFromText = ''
+    doge('healthDisplay').querySelectorAll('div').forEach(div => {
+        healthFromText += div.innerText
+    })
+
+    if(parseInt(healthFromText) !== player.health) {
+        doge('healthDisplay').innerHTML = ''
+        for(let i = 0; i < Math.round(player.health).toString().length; i++) {
+            const letterDiv = document.createElement('div')
+            letterDiv.innerText = Math.round(player.health).toString()[i]
+            doge('healthDisplay').append(letterDiv)
+        }
+    }
     doge('healthBar').style.width = player.health / player.maxHealth * 100 + '%'
     doge('lowerHealthBar').style.width = player.health / player.maxHealth * 100 + '%'
-    doge('healthDisplay').innerText = DeBread.round(player.health)
 
     //SUPER
 
@@ -1241,7 +1261,7 @@ document.addEventListener('mousedown', ev => {
                                             }
                                             for(let i = 0; i < bullet.timesRicocheted; i++) {
                                                 setTimeout(() => {
-                                                    getPoints((50 * bullet.timesRicocheted) * ((player.combo / 5) + 1), '+Ricochet')
+                                                    getPoints((5 * bullet.timesRicocheted) * ((player.combo / 5) + 1), '+Ricochet')
                                                 }, i * 25);
                                             }
     
@@ -1435,13 +1455,16 @@ function damagePlayer(amount, affectCombo = true) {
             updateUI()
 
             DeBread.easeShake(doge('styleDisplay'), 10, 10, 1)
+            doge('healthDisplay').querySelectorAll('div').forEach(div => {
+                DeBread.easeShake(div, 10, amount / 2, 1)
+            })
 
-            DeBread.easeShake(doge('healthBarContainer'), 10, amount, 1)
+            DeBread.easeShake(doge('healthBarContainer'), 10, amount / 5, 1)
             DeBread.playSound(`media/audio/hit${DeBread.randomNum(0, 2)}.mp3`, 0.5)
             doge('comboDisplay').innerText = `x${player.combo}`
             DeBread.createParticles(
                 document.body,
-                amount * 2,
+                amount * 1.5,
                 0,
                 1000,
                 'cubic-bezier(0,1,.5,1)',
@@ -1450,18 +1473,30 @@ function damagePlayer(amount, affectCombo = true) {
                 [[0, 0], [-90, 90]],
                 [[-25, 25], [-25, 25]],
                 [[255, 0, 0], [255, 0, 0]],
-                [[255, 0, 0], [255, 0, 0]]
+                [[255, 0, 0], [255, 0, 0]],
+                true
             )
         }
 
         if(amount > 0) { //????
             createPopupText([player.realPos[0], player.realPos[1]], amount, 20, 600, 'red')
         }
-
+        
         if((player.health / player.maxHealth) * 100 <= 25) {
             game.style.boxShadow = 'inset 0px 0px 50px rgb(255, 0, 0, 0.5)'
+            doge('playerBarHeart').style.animation = 'heartPulse 0.75s ease-out infinite forwards'
         } else {
             game.style.boxShadow = 'inset 0px 0px 0px transparent'
+            doge('playerBarHeart').style.animation = 'none'
+        }
+
+        if(player.health === 0) {
+            doge('playerBarHeart').src = 'media/blood/blood0.png'
+            doge('playerBarHeart').style.animation = 'none'
+            doge('playerBarHeart').style.scale = 2
+        } else {
+            doge('playerBarHeart').src = 'media/glyphs/health.png'
+            doge('playerBarHeart').style.scale = 1
         }
 
         //DEATH
@@ -1474,7 +1509,7 @@ function damagePlayer(amount, affectCombo = true) {
 
             let deathDelay = 0
             
-            if(DeBread.randomNum(0, 25) === 0) {
+            if(DeBread.randomNum(0, 25) === 0 && data.level >= 10) {
                 const randomKey = DeBread.randomNum(0, deathVideos.length - 1)
                 doge('deathVideo').src = `media/${deathVideos[randomKey].src}`
                 doge('deathVideo').style.opacity = 1
@@ -1508,6 +1543,36 @@ function damagePlayer(amount, affectCombo = true) {
                 deathSquare2.remove()
             }, 2000);
 
+            //RENDER POINT DISTRIBUTION
+            let sortableArray = []
+            for (const key in player.pointDistribution) {
+                sortableArray.push([key, player.pointDistribution[key]]);
+            }
+            
+            sortableArray.sort(function(a, b) {
+                return a[1] - b[1];
+            })
+
+            doge('pointDistributionContainer').innerHTML = ''
+            let pointTotal = 0
+            for(const key in sortableArray) {
+                pointTotal += sortableArray[key][1]
+            }
+
+            for(const key in sortableArray) {
+                const div = document.createElement('div')
+                div.style.width = `${sortableArray[key][1] / pointTotal * 100}%`
+                div.setAttribute('ouegh', sortableArray[key][0])
+                doge('pointDistributionContainer').append(div)
+
+                div.onmouseenter = () => {
+                    doge('pointDistributionTooltip').innerText = `${sortableArray[key][0].replaceAll('_',' ')}: ${DeBread.round(sortableArray[key][1])} (${DeBread.round(sortableArray[key][1] / pointTotal * 100, 2)}%)`
+                }
+                div.onmouseleave = () => {
+                    doge('pointDistributionTooltip').innerText = ''
+                }
+            }
+
             //OTHER STUFF
 
             DeBread.easeShake(game, 25, 10, 0.1)
@@ -1540,6 +1605,14 @@ function damagePlayer(amount, affectCombo = true) {
 
         if(DeBread.round(player.health) === 0 && player.alive) {
             getAchievement('closeCall')
+        }
+
+        if(!data.sandbox && amount !== 0) {
+            if(amount > 0) {
+                data.stats.damageTaken += amount
+            } else {
+                data.stats.healthHealed += -amount
+            }
         }
     }
 }
@@ -1612,6 +1685,13 @@ function getPoints(base, styleText, real = true) { //This might just be the most
     if(player.points >= 1000000000) {
         getAchievement('andIThought10DigitsWasTooMany')
     }
+
+    //Add to point distribution
+    if(!player.pointDistribution[styleText.replaceAll(' ','_').replaceAll('+','')]) {
+        player.pointDistribution[styleText.replaceAll(' ','_').replaceAll('+','')] = base * data.scoreMultiplier
+    } else {
+        player.pointDistribution[styleText.replaceAll(' ','_').replaceAll('+','')] += base * data.scoreMultiplier
+    }
 }
 
 let xpBarDownTimout
@@ -1660,6 +1740,9 @@ function getXP(amount) {
                 data.xp += amount / 500
                 updateXPBar()
                 updateMenuProfile()
+                if(i === 499) {
+                    data.stats.xpChanges.push(data.xp)
+                }
             }, 2 * i);
         }
     }, 500);
@@ -2573,7 +2656,7 @@ function spawnEnemy(type, pos) {
                         [[0, 255, 0], [0, 255, 100]]
                     )
                     if(isColliding(playerD, poisonField) && gameActive) {
-                        damagePlayer(type.poisonField.damage * enemy.damageMultiplier, true)
+                        damagePlayer(type.poisonField.damage * enemy.damageMultiplier * enemyInfo.damageMultiplier, true)
                         DeBread.playSound(`media/audio/poisonTick${DeBread.randomNum(0, 2)}.mp3`, 0.25)
                     }
                 }
@@ -2655,7 +2738,7 @@ function spawnEnemy(type, pos) {
                 }
 
                 if(isColliding(playerD, enemy) && gameActive && performance.now() - enemy.lastHitPlayer >= 500) {
-                    damagePlayer(type.damage)
+                    damagePlayer(type.damage * enemy.damageMultiplier * enemyInfo.damageMultiplier)
                     if(type.explosive) {
                         enemy.kill()
                     }
@@ -2697,7 +2780,7 @@ function spawnEnemy(type, pos) {
 
         if(type.dealPassiveDamage) {
             enemy.passiveDamageInterval = setInterval(() => {
-                damagePlayer(1, false)
+                damagePlayer(1 * enemyInfo.damageMultiplier, false)
             }, 250)
         }
     }, enemyInfo.prepareTime * gameSpeed);
@@ -2819,7 +2902,7 @@ function spawnEnemy(type, pos) {
         
                     grenade.delete = (dmgMultiplier = 1) => {
                         if(grenade.active) {
-                            createExplosion([grenade.pos[0] + 5, grenade.pos[1] + 5], type.grenade.size, type.grenade.damage * dmgMultiplier * enemy.damageMultiplier, false)
+                            createExplosion([grenade.pos[0] + 5, grenade.pos[1] + 5], type.grenade.size, type.grenade.damage * dmgMultiplier * enemy.damageMultiplier * enemyInfo.damageMultiplier, false)
                             grenade.remove()
                             grenade.active = false
                         }
@@ -2856,7 +2939,7 @@ function spawnEnemy(type, pos) {
                         let explosionPos = [player.realPos[0],player.realPos[1]]
                         setTimeout(() => {
                             if(enemy.alive) {
-                                createExplosion(explosionPos, type.beam.size, type.beam.damage * enemy.damageMultiplier)
+                                createExplosion(explosionPos, type.beam.size, type.beam.damage * enemy.damageMultiplier * enemyInfo.damageMultiplier)
                                 enemy.beam.remove()
                             }
                         }, 1000 * gameSpeed);
@@ -2985,7 +3068,7 @@ function spawnEnemy(type, pos) {
 
             if(type.explosive) {
                 setTimeout(() => {
-                    createExplosion([enemy.pos[0] + type.size / 2, enemy.pos[1] + type.size / 2], type.explosive.size, type.explosive.damage * enemy.damageMultiplier, false)
+                    createExplosion([enemy.pos[0] + type.size / 2, enemy.pos[1] + type.size / 2], type.explosive.size, type.explosive.damage * enemy.damageMultiplier * enemyInfo.damageMultiplier, false)
                 }, 10 * gameSpeed);
             }
             if(gameActive && document.querySelectorAll('enemy').length === 0 && !data.settings.sandbox) {
@@ -3714,8 +3797,20 @@ function openShop(upgradeAmount, progressWave = true) {
                             if(currentWaveSize >= 10) {
                                 getAchievement('survivor')
                             }
+                            if(currentWaveSize >= 25 && enemyInfo.damageMultiplier === 1) {
+                                createWarning('The air becomes tense...', 'Enemies deal 50% more damage.')
+                                enemyInfo.damageMultiplier = 1.5
+                            }
+                            if(currentWaveSize >= 50 && !enemyInfo.radient) {
+                                createWarning('Enemies start to evolve...', 'Enemies can now become radient.')
+                                enemyInfo.radient = true
+                            }
                             if(currentWaveSize >= 50) {
                                 getAchievement('trooper')
+                            }
+                            if(currentWaveSize >= 100 && enemyInfo.damageMultiplier === 1.5) {
+                                createWarning('Enemies become enraged.', 'Enemies deal 100% more damage.')
+                                enemyInfo.damageMultiplier = 3
                             }
                             if(currentWaveSize >= 100) {
                                 getAchievement('conqueror')
@@ -3793,6 +3888,31 @@ function openShop(upgradeAmount, progressWave = true) {
             updateInventory()
         }
     }
+}
+
+function createWarning(title, text) {
+    const warning = document.createElement('div')
+    warning.classList.add('gameWarning')
+    warning.innerHTML = `
+        <div class="gameWarningExclamation">
+            <span>!</span>
+        </div>
+        <span class="gameWarningTitle">${title}</span>
+        <span class="gameWarningDesc">${text}</span>
+    `
+
+    doge('gameWarningContainer').append(warning)
+    setTimeout(() => {
+        warning.style.opacity = 1
+        warning.style.scale = 1
+        setTimeout(() => {
+            warning.style.opacity = 0
+            warning.style.scale = 0.75
+            setTimeout(() => {
+                warning.remove()
+            }, 500);
+        }, 5000);
+    }, 100);
 }
 
 //Add upgrade textures to load query...

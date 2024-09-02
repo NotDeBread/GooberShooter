@@ -155,7 +155,7 @@
         </div>
         <div>
             <div id="mainTitleScreenTitle"></div>
-            <span style="font-size: 15px;">v1.01c</span>
+            <span style="font-size: 15px;">v1.02</span>
         </div>
         <div class="genericMenuButtons">
             <button class="genericMenuButton" onclick="openMenu('game')">PLAY</button>
@@ -510,6 +510,20 @@
                         </div>
                         <div class="stat">
                             <div>
+                                <span>Damage Taken</span>
+                            </div>
+                            <coolLine></coolLine>
+                            <span id="statDamageTaken">-</span>
+                        </div>
+                        <div class="stat">
+                            <div>
+                                <span>Health Healed</span>
+                            </div>
+                            <coolLine></coolLine>
+                            <span id="statHealthHealed">-</span>
+                        </div>
+                        <div class="stat">
+                            <div>
                                 <span>Highest Wave Reached</span>
                             </div>
                             <coolLine></coolLine>
@@ -572,6 +586,10 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div id="xpGraphContainer">
+                        <em id="xpGraphLabel">XP over time</em>
+                        <canvas id="xpGraph" width="496" height="150"></canvas><br>
                     </div>
                     <span id="statCreationDate">Created -</span>
                 </div>
@@ -800,6 +818,8 @@
         <div id="deathScreen">
             <span style="font-size: 2em; font-weight: 900;">YOU DEAD</span>
             <span id="pointsResult">POINTS: idk</span>
+            <span id="pointDistributionTooltip"></span>
+            <div id="pointDistributionContainer"></div>
             <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
                 <button class="genericMenuButton" onclick="openMenu('play'); closeDeathScreen(); resetPlayer()" style="margin-top: 10px;">RESTART</button>
                 <button class="genericMenuButton" onclick="openMenu('game'); closeDeathScreen()">GAME SETTINGS</button>
@@ -825,7 +845,7 @@
         <div id="ui">
             <div id="playerBars">
                 <div class="playerBar" id="healthBarContainer">
-                    <img src="media/glyphs/health.png" height="15">
+                    <img src="media/glyphs/health.png" height="15" id="playerBarHeart">
                     <div class="playerBarContainer" id="healthContainer">
                         <div id="healthBar" style="background-color: red;"></div>
                         <div id="lowerHealthBar"></div>
@@ -839,6 +859,15 @@
                         <div id="superBar" style="background-color: white;"></div>
                     </div>
                 </div>
+            </div>
+            <div id="gameWarningContainer">
+                <!-- <div class="gameWarning">
+                    <div class="gameWarningExclamation">
+                        <span>!</span>
+                    </div>
+                    <span class="gameWarningTitle">The air becomes tense...</span>
+                    <span class="gameWarningDesc">Enemies deal +50% more damage.</span>
+                </div> -->
             </div>
             <div id="statsContainer">
                 <div id="stats">
@@ -877,8 +906,8 @@
             </div>
             <div id="ammoUI">
                 <span id="ammoDisplay">
-                    <span id="ammoNumber">00</span>
-                    <span id="ammoNumberBar">||||||||||</span>
+                    <em id="ammoNumber">00</em>
+                    <em id="ammoNumberBar">||||||||||</em>
                 </span>
                 <div id="ammoBar">
                     <div id="innerAmmoBar"></div>

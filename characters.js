@@ -185,7 +185,8 @@ const characters = {
         desc: 'im restarted or whatever you call it',
         pack: 'custom',
         taunts: 3,
-        tauntSounds: ['ahh.mp3']
+        tauntSounds: ['ahh.mp3'],
+        code: 'bello',
     },
     asuka: {
         unlocked: false,

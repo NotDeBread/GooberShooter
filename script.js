@@ -8,7 +8,6 @@ const defaultData = {
     accountCreationDate: Date.now(),
     
     stats: {
-        
         enemiesKilled: 0,
         enemiesKilledByMelee: 0,
         timesParried: 0,
@@ -16,9 +15,12 @@ const defaultData = {
         highestScore: 0,
         totalScore: 0,
         challengesCompleted: 0,
+        damageTaken: 0,
+        healthHealed: 0,
 
         upgrades: {},
         activity: [],
+        xpChanges: [0]
     },
 
     challenges: [],
@@ -191,6 +193,7 @@ const imagesToLoad = {
         'media/blood/bigBlood0.png',
         'media/saw.png',
         'media/fire.gif',
+        'media/warningBG.png',
         'https://soggy.cat/img/soggycat.webp',
         'https://i.redd.it/ztv4vguqi14c1.png',
     ]

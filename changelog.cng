@@ -388,7 +388,35 @@ Enemy12: Has a defensive poison field around them, and shoots bullets spawning p
     -Challenges completed, melee kills, and total XP are now tracked.
 
 **SMALL STUFF**
--Leveling up no requires less XP.
+-Leveling up now requires less XP.
 
 **BUG FIXES**
 -Potentially fixed achievement texture loading.
+
+{newLog}
+
+# v1.02
+
+**GAMEPLAY**
+-At certain wave milestones, events start to happen.
+    -At wave 25, enemies deal 50% more damage.
+    -At wave 50, enemies can become radiant.
+    -At wave 100, enemies deal 100% more damage. (stack on top of the previous 50%.)
+
+-After death, there is now a point distribution chart showing what gave the most points during the players game.
+-Altered some point bonuses.
+-Altered level gain curve.
+-Death videos now only appear if the player has reached level 10.
+
+**UI/MENU**
+-The health bar now has a new look with new animations.
+-Achievements no longer have a border radius after thier animation ends.
+
+**STATS MENU**
+-XP gain graph. (Rough right now but will improve later.)
+-Damage taken and health healed are now tracked.
+
+**BUG FIXES**
+-Player and enemy shoot lines stop rendering after the player dies.
+-Fixed activities in the stats menu displaying the incorrect date.
+-Removed small updates from the changelog menu.

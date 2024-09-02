@@ -295,11 +295,12 @@ function createAchNoti(ach) {
 
     doge('achNotiContainer').append(noti)
 
-    noti.style.transition = 'width cubic-bezier(.5,-0.5,.25,1) 500ms, height cubic-bezier(.5,-0.5,.25,1) 500ms, opacity ease-in-out 1s'
+    noti.style.transition = 'width cubic-bezier(.5,-0.5,.25,1) 500ms, height cubic-bezier(.5,-0.5,.25,1) 500ms, opacity ease-in-out 1s, border-radius cubic-bezier(.5,-0.5,.25,1) 500ms'
     setTimeout(() => {
         if(noti) {
             noti.style.width = '350px'
             noti.style.height = '50px'
+            noti.style.borderRadius = '0px'
             notiSection1.style.opacity = 0
             setTimeout(() => {
                 if(noti) {

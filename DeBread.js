@@ -458,7 +458,7 @@ window.onerror = ev => {
 function getCompoundXP(level) {
     let output = 0;
     for (let i = 1; i <= level; i++) {
-        output += Math.pow(500 * i, 1.03)
+        output += Math.pow(500 * i, 1.05)
     }
     return output
 }

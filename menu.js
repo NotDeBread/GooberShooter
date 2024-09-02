@@ -110,6 +110,8 @@ function openMenu(menu) {
                 enemiesAlive = 0
                 totalEnemies = 0
                 enemyInfo.speedMultiplier = 1
+                enemyInfo.damageMultiplier = 1
+                enemyInfo.radient = false
                 currentWaveSize = data.settings.starting_wave
                 resetPlayer()
                 update()
@@ -272,6 +274,8 @@ function openMenu(menu) {
                 doge('statEnemiesKilled').innerText = data.stats.enemiesKilled
                 doge('statMeleeKills').innerText = data.stats.enemiesKilledByMelee
                 doge('statTimesParried').innerText = data.stats.timesParried
+                doge('statDamageTaken').innerText = formatNumber(DeBread.round(data.stats.damageTaken))
+                doge('statHealthHealed').innerText = formatNumber(DeBread.round(data.stats.healthHealed))
                 doge('statHighestWave').innerText = data.stats.highestWaveReached
                 doge('statHighScore').innerText = formatNumber(DeBread.round(data.stats.highestScore))
                 doge('statTotalScore').innerText = formatNumber(DeBread.round(data.stats.totalScore))
@@ -328,6 +332,52 @@ function openMenu(menu) {
                 const now = new Date(data.accountCreationDate);
                 doge('statCreationDate').innerText = `Account created ${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`
 
+                //XP Graph
+                const canvas = doge('xpGraph')
+                const graphData = data.stats.xpChanges
+                const graphCTX = canvas.getContext('2d')
+                const canvasWidth = canvas.width
+                const canvasHeight = canvas.height
+                const maxValue = Math.max(...graphData) * 1.1
+                const widthPerPoint = canvasWidth / (graphData.length - 1)
+                
+                graphCTX.clearRect(0, 0, canvasWidth, canvasHeight)
+
+                graphCTX.beginPath()
+                graphCTX.moveTo(0, canvasHeight)
+                graphCTX.strokeStyle = 'white'
+                graphCTX.lineWidth = 2 
+                
+                for (let i = 0; i < graphData.length; i++) {
+                    const percentOfMax = graphData[i] / maxValue
+                    graphCTX.lineTo(
+                        widthPerPoint * i,
+                        canvasHeight - (canvasHeight * percentOfMax)
+                    )
+                    console.log(i)
+                }
+                
+                graphCTX.lineTo(canvasWidth, canvasHeight)
+                graphCTX.lineTo(0, canvasHeight)
+
+                const gradient = graphCTX.createLinearGradient(0, 0, 0, canvasHeight)
+                gradient.addColorStop(0, 'grey')
+                gradient.addColorStop(1, 'transparent')
+                graphCTX.fillStyle = gradient
+                graphCTX.fill()
+                graphCTX.stroke()
+
+                //XP Graph points
+                doge('xpGraphContainer').querySelectorAll('.xpGraphPoint').forEach(point => {point.remove()})
+                for (let i = 0; i < graphData.length; i++) {
+                    const percentOfMax = graphData[i] / maxValue
+                    const point = document.createElement('div')
+                    point.classList.add('xpGraphPoint')
+                    point.style.left = widthPerPoint * i + 'px'
+                    point.style.top = canvasHeight - (canvasHeight * percentOfMax) + 'px'
+                    doge('xpGraphContainer').append(point)
+                }
+
                 //Activity
 
                 doge('statActivityContainer').innerHTML = ''
@@ -338,7 +388,7 @@ function openMenu(menu) {
                         div.classList.add('statActivity')
                         div.innerHTML = `
                             <span>${data.stats.activity[key][0].replaceAll('&', name)}</span>
-                            <em style="font-size: 0.75em; color: grey;">${date.getMonth()}/${date.getDay()}/${date.getFullYear()}</em>
+                            <em style="font-size: 0.75em; color: grey;">${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}</em>
                         `
                         doge('statActivityContainer').append(div)
                     }
@@ -475,9 +525,8 @@ const changelogs = [
     'Playtest v0.04',
     'Playtest v0.05',
     'v1.00',
-    'v1.00b',
     'v1.01',
-    'v1.01b'
+    'v1.02'
 ]
 let selectedChangelog = changelogs.length - 1
 function renderChangelog(key) {
