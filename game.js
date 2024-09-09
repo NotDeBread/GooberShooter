@@ -18,14 +18,19 @@ function resetPlayer() {
         realPos: [0, 0],
         taunting: false,
         size: 54,
+        dashing: 1, //=1: false, >1: true
+        dashDate: 0,
+        stamina: 100,
+        dashes: 4,
+        staminaRegen: 1,
+        immune: false,
+        poisonTrail: 0,
     
         points: 0,
         style: 50,
         combo: 1,
         comboLoss: 1,
-        pointDistribution: {
-
-        },
+        pointDistribution: {},
     
         health: 100,
         maxHealth: 100,
@@ -33,8 +38,6 @@ function resetPlayer() {
         healthRegen: 0,
         parasite: 0,
     
-        super: 0,
-
         gun: {
             damage: 5,
             maxAmmo: 10,
@@ -428,9 +431,9 @@ document.addEventListener('keydown', ev => {
         if(ev.key.toLowerCase() === 'w' && player.intervals.up === undefined) {
             player.intervals.up = setInterval(() => {
                 if(!paused) {
-                    if(player.pos[1] - player.speed > 0) {
-                        player.pos[1] -= player.speed
-                        increaseChallengeProgress('travel', player.speed)
+                    if(player.pos[1] - player.speed * player.dashing > 0) {
+                        player.pos[1] -= player.speed * player.dashing
+                        increaseChallengeProgress('travel', player.speed * player.dashing)
                     } else {
                         player.pos[1] = 0
                     }
@@ -440,9 +443,9 @@ document.addEventListener('keydown', ev => {
         if(ev.key.toLowerCase() === 'a' && player.intervals.left === undefined) {
             player.intervals.left = setInterval(() => {
                 if(!paused) {
-                    if(player.pos[0] - player.speed > 0) {
-                        player.pos[0] -= player.speed
-                        increaseChallengeProgress('travel', player.speed)
+                    if(player.pos[0] - player.speed * player.dashing > 0) {
+                        player.pos[0] -= player.speed * player.dashing
+                        increaseChallengeProgress('travel', player.speed * player.dashing)
                     } else {
                         player.pos[0] = 0
                     }
@@ -452,9 +455,9 @@ document.addEventListener('keydown', ev => {
         if(ev.key.toLowerCase() === 's' && player.intervals.down === undefined) {
             player.intervals.down = setInterval(() => {
                 if(!paused) {
-                    if(player.pos[1] + player.speed < game.offsetHeight - playerD.offsetHeight) {
-                        player.pos[1] += player.speed
-                        increaseChallengeProgress('travel', player.speed)
+                    if(player.pos[1] + player.speed * player.dashing < game.offsetHeight - playerD.offsetHeight) {
+                        player.pos[1] += player.speed * player.dashing
+                        increaseChallengeProgress('travel', player.speed * player.dashing)
                     } else {
                         player.pos[1] = game.offsetHeight - playerD.offsetHeight
                     }
@@ -464,9 +467,9 @@ document.addEventListener('keydown', ev => {
         if(ev.key.toLowerCase() === 'd' && player.intervals.right === undefined) {
             player.intervals.right = setInterval(() => {
                 if(!paused) {
-                    if(player.pos[0] + player.speed < game.offsetWidth - playerD.offsetWidth) {
-                        player.pos[0] += player.speed
-                        increaseChallengeProgress('travel', player.speed)
+                    if(player.pos[0] + player.speed * player.dashing < game.offsetWidth - playerD.offsetWidth) {
+                        player.pos[0] += player.speed * player.dashing
+                        increaseChallengeProgress('travel', player.speed * player.dashing)
                     } else {
                         player.pos[0] = game.offsetWidth - playerD.offsetWidth
                     }
@@ -532,6 +535,69 @@ document.addEventListener('keydown', ev => {
                 }
             }, reloadSpeed);
         }
+        if(ev.key.toLowerCase() === 'shift' && player.stamina >= 100 / player.dashes && performance.now() - player.dashDate > 500 && !selectedEnemy) {
+            player.dashDate = performance.now()
+            DeBread.playSound(`media/audio/dash${DeBread.randomNum(0, 2)}.mp3`, 0.25)
+            DeBread.shake(game, 10, 5, 5, 100)
+            DeBread.createParticles(
+                game,
+                10,
+                0,
+                1000,
+                'ease-out',
+                [[player.pos[0], player.pos[0] + player.size], [player.pos[1], player.pos[1] + player.size]],
+                [[[10, 10], [10, 10]],[[0, 0], [0, 0]]],
+                [[0, 0], [0, 0]],
+                [[-25, 25], [-25, 25]],
+                [[255, 255, 255], [255, 255, 255]],
+                [[255, 255, 255], [255, 255, 255]],
+                true
+            )
+
+            player.stamina -= 100 / player.dashes
+            player.dashing = 4
+            player.immune = true
+            playerD.style.outline = '2px solid rgb(255, 255, 255, 0.75)'
+
+            if(player.poisonTrail > 0) {
+                createPoisonField([player.pos[0] + player.size / 2, player.pos[1] + player.size / 2], 30 + (player.poisonTrail * 10), 5 + player.poisonTrail, 10 + player.poisonTrail, true)
+            }
+            for(let i = 1; i < 6; i++) {
+                setTimeout(() => {
+                    player.dashing -= 0.5
+
+                    DeBread.createParticles(
+                        game,
+                        1,
+                        0,
+                        1000,
+                        'ease-out',
+                        [[player.pos[0], player.pos[0] + player.size], [player.pos[1], player.pos[1] + player.size]],
+                        [[[5, 5], [5, 5]],[[0, 0], [0, 0]]],
+                        [[0, 0], [0, 0]],
+                        [[-25, 25], [-25, 25]],
+                        [[255, 255, 255], [255, 255, 255]],
+                        [[255, 255, 255], [255, 255, 255]],
+                        true
+                    )
+
+                    if(player.poisonTrail > 0) {
+                        createPoisonField([player.pos[0] + player.size / 2, player.pos[1] + player.size / 2], 30 + (player.poisonTrail * 10), 5 + player.poisonTrail, player.poisonTrail, true)
+                    }
+                }, 50 * i);
+            }
+
+            setTimeout(() => {
+                player.immune = false
+                playerD.style.outline = 'none'
+            }, 500);
+
+            updateUI()
+
+            setTimeout(() => {
+                player.dashing = 1
+            }, 500);
+        }
         if(ev.key.toLowerCase() === 'escape') {
             if(!paused) {
                 togglePauseScreen()
@@ -549,15 +615,6 @@ document.addEventListener('keydown', ev => {
                 playerD.block()
                 getAchievement('showOff')
             } 
-        }
-        if(ev.key.toLowerCase() === ' ') {
-            if(player.super === 50) {
-                document.querySelectorAll('enemy').forEach(enemy => {
-                    enemy.kill()
-                })
-                player.super = 0
-                updateUI()
-            }
         }
         if(ev.key.toLowerCase() === 'f') { //old parry code lmao
             // game.querySelectorAll('.bullet').forEach((bullet) => {
@@ -726,6 +783,17 @@ document.addEventListener('keyup', (ev) => {
         }
     }
 })
+
+//stamina recharge interval
+setInterval(() => {
+    if(!paused && performance.now() - player.dashDate > 1000 - (Math.max(250, (player.staminaRegen - 1) * 10)) && player.stamina < 100) {
+        player.stamina += player.staminaRegen
+        updateUI()
+    }
+    if(player.stamina > 100) {
+        player.stamina = 100
+    }
+}, 100);
 
 //God please kill me
 function updatePlayerDirection() {
@@ -970,6 +1038,22 @@ function update() {
                     [[255, 0, 0], [255, 0, 0]]
                 )
                 damagePlayer(bullet.damage * enemyInfo.damageMultiplier)
+                if(player.immune) {
+                    DeBread.createParticles(
+                        game,
+                        25,
+                        0,
+                        250,
+                        'ease-out',
+                        [[bullet.pos[0], bullet.pos[0]], [bullet.pos[1], bullet.pos[1]]],
+                        [[[5, 5], [5, 5]], [[0, 0], [0, 0]]],
+                        [[0, 0], [-90, 90]],
+                        [[-50, 50], [-50, 50]],
+                        [[200, 200, 200], [200, 200, 200]],
+                        [[200, 200, 200], [200, 200, 200]]
+                    )
+                }
+
                 updateUI()
 
                 if(bullet.hurtSelf) {
@@ -1061,9 +1145,14 @@ function updateUI() {
     doge('healthBar').style.width = player.health / player.maxHealth * 100 + '%'
     doge('lowerHealthBar').style.width = player.health / player.maxHealth * 100 + '%'
 
-    //SUPER
+    //STAMINA
+    doge('staminaBar').style.width = Math.max(player.stamina, 0) + '%'
 
-    doge('superBar').style.width = player.super * 2 + '%'
+    doge('staminaBarOverlay').innerHTML = ''
+    for(let i = 0; i < player.dashes; i++) {
+        const div = document.createElement('div')
+        doge('staminaBarOverlay').append(div)
+    }
 
     //AMMO
     if(!player.gun.reloading) {
@@ -1420,24 +1509,25 @@ const deathVideos = [
 //PLAYER DAMAGE
 function damagePlayer(amount, affectCombo = true) {
     if(gameActive && !paused) {
-        if(player.health - amount < 0) {
-            player.health = 0
-        } else if(player.health - amount > player.maxHealth) {
-            player.health = player.maxHealth
-        } else {
-            if(amount < 0) {
-                if(player.canHeal) {
-                    player.health -= amount
-                }
+        if(amount > 0 && !player.immune) {
+            if(player.health !== 1 && player.health !== 0 && player.health - Math.max(amount, 0) <= 0) {
+                player.health = 1
             } else {
                 player.health -= amount
             }
         }
-    
+
+        player.health = Math.max(0, player.health)
+        
+        if(amount < 0 && player.canHeal) {
+            player.health -= amount
+        }
+
+        player.health = Math.min(player.maxHealth, player.health)
         
         updateUI()
         const healthBarRect = doge('healthBar').getBoundingClientRect()
-        if(amount > 0) {
+        if(amount > 0 && !player.immune) {
             if(affectCombo) {
                 if(player.style - 25 < 0) {
                     player.style = 0
@@ -1446,25 +1536,19 @@ function damagePlayer(amount, affectCombo = true) {
                 }
             }
 
-            if(player.super - 10 < 0) {
-                player.super = 0
-            } else {
-                player.super -= 10
-            }
-
             updateUI()
 
             DeBread.easeShake(doge('styleDisplay'), 10, 10, 1)
             doge('healthDisplay').querySelectorAll('div').forEach(div => {
-                DeBread.easeShake(div, 10, amount / 2, 1)
+                DeBread.easeShake(div, 10, Math.min(amount / 2, 150), 1)
             })
 
-            DeBread.easeShake(doge('healthBarContainer'), 10, amount / 5, 1)
+            DeBread.easeShake(doge('healthBarContainer'), 10, Math.min(amount / 5, 100), 1)
             DeBread.playSound(`media/audio/hit${DeBread.randomNum(0, 2)}.mp3`, 0.5)
             doge('comboDisplay').innerText = `x${player.combo}`
             DeBread.createParticles(
                 document.body,
-                amount * 1.5,
+                Math.min(amount * 1.5, 100),
                 0,
                 1000,
                 'cubic-bezier(0,1,.5,1)',
@@ -1479,15 +1563,27 @@ function damagePlayer(amount, affectCombo = true) {
         }
 
         if(amount > 0) { //????
-            createPopupText([player.realPos[0], player.realPos[1]], amount, 20, 600, 'red')
+            if(!player.immune) {
+                createPopupText([player.realPos[0], player.realPos[1]], amount, 20, 600, 'red')
+            } else {
+                createPopupText([player.realPos[0], player.realPos[1]], amount, 20, 600, 'grey')
+                getPoints(amount, '+Dodged')
+            }
         }
         
-        if((player.health / player.maxHealth) * 100 <= 25) {
-            game.style.boxShadow = 'inset 0px 0px 50px rgb(255, 0, 0, 0.5)'
+        if(player.health === 1) {
+            game.style.boxShadow = 'inset 0px 0px 50px rgb(255, 0, 0, 1)'
+            doge('playerBarHeart').style.animation = 'heartPulse 500ms ease-out infinite forwards'
+            game.style.filter = 'blur(1px)'
+
+        } else if((player.health / player.maxHealth) * 100 <= 25) {
+            game.style.boxShadow = 'inset 0px 0px 50px rgb(255, 0, 0, 0.25)'
             doge('playerBarHeart').style.animation = 'heartPulse 0.75s ease-out infinite forwards'
+            game.style.filter = 'blur(0px)'
         } else {
             game.style.boxShadow = 'inset 0px 0px 0px transparent'
             doge('playerBarHeart').style.animation = 'none'
+            game.style.filter = 'blur(0px)'
         }
 
         if(player.health === 0) {
@@ -1619,7 +1715,7 @@ function damagePlayer(amount, affectCombo = true) {
 
 //HEALTH REGEN
 setInterval(() => {
-    if(gameActive && doge('shop').style.display === 'none') {
+    if(gameActive && doge('shop').style.display === 'none' && player.health !== 1) {
         damagePlayer(-player.healthRegen / 10, true)
     }
 }, 100);
@@ -1810,10 +1906,6 @@ function getCombo() {
     requestAnimationFrame(() => {
         doge('comboDisplay').style.animation = 'comboDisplayPulse 250ms ease-out 1 forwards'
     })
-
-    if(player.super < 50) {
-        player.super++
-    }
 
     if(player.combo >= 100) {
         increaseChallengeProgress('100combo', 1)
@@ -2738,7 +2830,9 @@ function spawnEnemy(type, pos) {
                 }
 
                 if(isColliding(playerD, enemy) && gameActive && performance.now() - enemy.lastHitPlayer >= 500) {
-                    damagePlayer(type.damage * enemy.damageMultiplier * enemyInfo.damageMultiplier)
+                    if(!player.immune) {
+                        damagePlayer(type.damage * enemy.damageMultiplier * enemyInfo.damageMultiplier)
+                    }
                     if(type.explosive) {
                         enemy.kill()
                     }
@@ -3350,6 +3444,14 @@ const upgrades = [
         `,
         action: () => {player.gun.poisonLength += 5; player.gun.damage *= 0.9}
     },
+    {   
+        name: 'Poison Flask',
+        description: `
+            <span>Dashing creates a trail of poison fields.</span><br>
+            <span><b>-25%</b> Speed</span>
+        `,
+        action: () => {player.poisonTrail++; player.speed *= 0.75}
+    },
     {
         name: 'Precision Goggles',
         description: `
@@ -3395,7 +3497,7 @@ const upgrades = [
     {   
         name: 'Antibiotics',
         description: `
-            <span><g>+0.2</g> Heath regen</span><br>
+            <span><g>+0.2</g> Health regen</span><br>
             <span><b>-10%</b> Max health</span>
         `,
         action: () => {player.healthRegen += 0.25; player.maxHealth *= 0.9; updateUI()}
@@ -3438,6 +3540,14 @@ const upgrades = [
             <span><g>+20%</g> Speed</span>
         `,
         action: () => {player.speed *= 1.2}
+    },
+    {   
+        name: 'Leaf',
+        description: `
+            <span><g>+0.5</g> Stamina regen</span><br>
+            <span><b>-5%</b> Speed</span>
+        `,
+        action: () => {player.staminaRegen += 0.5; player.speed *= 0.95}
     },
     {   
         name: 'Broken Counter',
@@ -3609,16 +3719,29 @@ const rareUpgrades = [
     {
         name: 'Time Card',
         description: `
-        <span><g>+100%</g> Speed</span><br>
         <span><g>+50%</g> Reload speed</span><br>
+        <span><g>+25%</g> Speed</span><br>
         <span><g>-50%</g> Block cooldown</span><br>
         <span><g>+25%</g> Enemy speed</span><br>
         `,
         action: () => {
             enemyInfo.speedMultiplier *= 0.75
-            player.speed *= 2
+            player.speed *= 1.25
             player.gun.reloadSpeed *= 0.5
             player.block.cooldown *= 0.5
+        }
+    },
+    {
+        name: 'Mobility Card',
+        description: `
+        <span><g>+50%</g> Speed</span><br>
+        <span><g>+2</g> Dashes</span><br>
+        <span><g>+1</g> Stamina regen</span><br>
+        `,
+        action: () => {
+            player.speed *= 1.5
+            player.dashes += 2
+            player.staminaRegen += 1
         }
     }
 ]
@@ -3831,6 +3954,7 @@ function openShop(upgradeAmount, progressWave = true) {
                             health: false,
                             defense: false,
                             time: false,
+                            mobility: false,
                         }
                         for(const key in data.stats.upgrades) {
                             if(key.toLowerCase().replace(' card','') === 'ammunition') cardUpgrades.ammunition = true
@@ -3839,6 +3963,7 @@ function openShop(upgradeAmount, progressWave = true) {
                             if(key.toLowerCase().replace(' card','') === 'health') cardUpgrades.health = true
                             if(key.toLowerCase().replace(' card','') === 'defense') cardUpgrades.defense = true
                             if(key.toLowerCase().replace(' card','') === 'time') cardUpgrades.time = true
+                            if(key.toLowerCase().replace(' card','') === 'mobility') cardUpgrades.mobility = true
                         }
                         let achievementPassed = true
                         for(const key in cardUpgrades) {

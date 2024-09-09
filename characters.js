@@ -173,11 +173,11 @@ const characters = {
         name: 'Dark and Twisted Nyan',
         pack: 'evilGoober'
     },
-    luna: {
-        unlocked: false,
-        name: 'Luna',
-        pack: 'extraGoober',
-    },
+    // luna: {
+    //     unlocked: false,
+    //     name: 'Luna',
+    //     pack: 'extraGoober',
+    // },
     lye: {
         unlocked: false,
         credits: true,

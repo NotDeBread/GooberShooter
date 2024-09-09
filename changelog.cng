@@ -420,3 +420,30 @@ Enemy12: Has a defensive poison field around them, and shoots bullets spawning p
 -Player and enemy shoot lines stop rendering after the player dies.
 -Fixed activities in the stats menu displaying the incorrect date.
 -Removed small updates from the changelog menu.
+
+{newLog}
+
+# v1.03
+
+**GAMEPLAY**
+-Dashing and stamina.
+-It is now impossible to be one-shot by an enemy. Instead, you get reduced to 1HP then can die.
+-New upgrades:
+    Poison Flask:
+        Dashing creates a trail of poison fields.
+        -25% Speed
+    Leaf:
+        +0.5 Stamina regen
+        -5% Speed
+    Mobility Card:
+        +50% Speed
+        +2 Dashes
+        +1 Stamina regen
+
+**SANDBOX**
+-Added an input in the toolbox which changes the enemy damage multiplier.
+
+**OTHER STUFF**
+-Optimized some character textures.
+-Some health bar improvements.
+-Removed Luna character. (As requested.)

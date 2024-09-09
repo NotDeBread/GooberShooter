@@ -524,7 +524,7 @@ g {
   transform: skewX(-10deg);
 }
 
-#playerBarHeart {
+#playerBarHeart, #playerBarStamin {
   image-rendering: unset;
   transform: skewX(10deg);
 }
@@ -545,7 +545,7 @@ g {
   position: relative;
 }
 
-#healthBar, #superBar {
+#healthBar, #staminaBar {
   position: absolute;
   width: 0;
   height: 100%;
@@ -564,6 +564,25 @@ g {
 #healthDisplay {
   display: flex;
   font-weight: 700;
+}
+
+#staminaBarOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+#staminaBarOverlay div {
+  width: 100%;
+  height: 100%;
+  outline: 1px solid grey;
+}
+
+#staminaBarOverlay div:nth-child(1) {
+  background-color: rgb(255, 0, 0, 0.5);
 }
 
 #gameWarningContainer {
@@ -810,6 +829,28 @@ coolLine {
   background-color: white;
 }
 
+#autoClickContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100dvw;
+  padding: 5px;
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+
+  display: none;
+}
+
+#autoClickContainer span:nth-child(1) {
+  font-size: 2em;
+  font-weight: 700;
+  color: rgb(254, 58, 50);
+}
+
+#autoClickContainer span {
+  font-size: 1.25em;
+}
+
 #toolboxContainer {
   height: 100dvh;
   display: flex;
@@ -957,7 +998,7 @@ coolLine {
   align-items: center;
   gap: 3px;
   background: linear-gradient(transparent, black);
-  height: 65px;
+  height: 55px;
   width: 100%;
 }
 

@@ -526,7 +526,8 @@ const changelogs = [
     'Playtest v0.05',
     'v1.00',
     'v1.01',
-    'v1.02'
+    'v1.02',
+    'v1.03'
 ]
 let selectedChangelog = changelogs.length - 1
 function renderChangelog(key) {

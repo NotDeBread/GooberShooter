@@ -155,7 +155,7 @@
         </div>
         <div>
             <div id="mainTitleScreenTitle"></div>
-            <span style="font-size: 15px;">v1.02</span>
+            <span style="font-size: 15px;">v1.03</span>
         </div>
         <div class="genericMenuButtons">
             <button class="genericMenuButton" onclick="openMenu('game')">PLAY</button>
@@ -326,6 +326,15 @@
                 <span>
                     If you're having problems about how this works, please contact me through
                     <a target="_blank" href="https://discord.com/users/526773449163538433" style="color: mediumslateblue">Discord</a>.
+                </span>
+            </div>
+            <br>
+            <span class="htpBoxHeading">I don't wanna make it</span>
+            <div style="line-height: 1.25;">
+                <span>
+                    If you don't want to take the time to make a character, you can ask me (<a target="_blank"
+                        href="https://discord.com/users/526773449163538433" style="color: mediumslateblue">DeBread</a>) to create it for you. Please note that
+                    this method does not guarantee your character being created or being added to the game.
                 </span>
             </div>
             <div style="display: flex; justify-content: center; margin: 25px;">
@@ -660,6 +669,11 @@
                         <div class="key">R</div>
                     </div>
                     <div class="control">
+                        <span>Dash</span>
+                        <line></line>
+                        <div class="key" style="width: 100px;">SHIFT</div>
+                    </div>
+                    <div class="control">
                         <span>Taunt</span>
                         <line></line>
                         <div class="key">C</div>
@@ -702,6 +716,7 @@
                         <div>Burnt</div>
                         <div>Ricochet</div>
                         <div>Parry</div>
+                        <div>Dodged</div>
                         <div>Enemy spawned</div>
                         <div>Combo x</div>
                     </div>
@@ -718,6 +733,7 @@
                         <div>Kill an enemy while it's on fire.</div>
                         <div>Bounce a bullet into an enemy.</div>
                         <div>Parry an enemy's bullet.</div>
+                        <div>Get hit by an enemy or bullet while dashing.</div>
                         <div>Let an enemy spawn.</div>
                         <div>Reach a combo of 10 or a multiple of 25.</div>
                     </div>
@@ -853,10 +869,16 @@
                     <span id="healthDisplay">100</span>
                 </div>
 
-                <div class="playerBar" id="superBarContainer" style="display: none;">
-                    <img src="media/glyphs/super.png" height="15">
+                <div class="playerBar" id="staminaBarContainer">
+                    <img src="media/glyphs/super.png" height="15" id="playerBarStamin">
                     <div class="playerBarContainer" id="superContainer">
-                        <div id="superBar" style="background-color: white;"></div>
+                        <div id="staminaBarOverlay">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <div id="staminaBar" style="background-color: white;"></div>
                     </div>
                 </div>
             </div>
@@ -939,6 +961,11 @@
                         <div class="gameChallengeInnerBar"></div>
                     </div>
                 </div> -->
+            </div>
+            <div id="autoClickContainer">
+                <span>Auto clicker detected, Loser!</span><br>
+                <span>The use of auto clickers are illigitmate and will not be allowed for use in Goober Shooter.</span><br>
+                <span>Current score will not be saved when ended.</span>
             </div>
 
             <div id="toolboxContainer">

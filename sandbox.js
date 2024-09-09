@@ -151,12 +151,26 @@ function renderToolboxMenu(menu) {
         }
         waveContainer.append(killButton)
 
+        
         const createButton = document.createElement('button')
         createButton.innerText = 'Create'
         createButton.style.marginLeft = '5px'
         createButton.classList.add('toolboxThinButton')
         createButton.onclick = () => {renderToolboxMenu(5)}
         waveContainer.append(createButton)
+
+        const damageButton = document.createElement('button')
+        damageButton.innerText = 'Set DMG Multi'
+        damageButton.classList.add('toolboxThinButton')
+        damageButton.onclick = () => {enemyInfo.damageMultiplier = parseInt(damageInput.value)}
+        waveContainer.append(damageButton)
+
+        const damageInput = document.createElement('input')
+        damageInput.classList.add('toolboxInput')
+        damageInput.type = 'number'
+        damageInput.style.width = '50px'
+        damageInput.placeholder = 'dmg'
+        waveContainer.append(damageInput)
 
         const radiant = document.createElement('button')
         radiant.innerText = 'Radiate Enemy'
@@ -199,7 +213,7 @@ function renderToolboxMenu(menu) {
     }
     if(menu === 2) {
         for(const playerSetting in player) {
-            if(typeof player[playerSetting] === 'number') {
+            if(typeof player[playerSetting] === 'number' && !['dashDate','dashing','stamina','style','points'].includes(playerSetting)) {
                 const inputContainer = document.createElement('div')
                 inputContainer.classList.add('toolboxInputContainer')
                 inputContainer.innerHTML = `
