@@ -398,8 +398,184 @@ function openMenu(menu) {
                 }
             }
 
+            if(menu === 'collection') {
+                function updateCollectionMenu(menu) {
+                    doge('innerCollection').innerHTML = ''
+                    if(menu === 0) {
+                        doge('collectionTitleSpan').innerText = 'ENEMIES'
+                        doge('collectionButtonEnemies').style.backgroundColor = 'white'
+                        doge('collectionButtonEnemies').style.color = 'black'
+                        doge('collectionButtonUpgrades').style.backgroundColor = 'unset'
+                        doge('collectionButtonUpgrades').style.color = 'unset'
+                        doge('innerCollectionProgressBar').style.width = data.stats.enemiesUnlocked.length / enemyTypes.length * 100 + '%'
+                        doge('collectionProgressBarOverlaySpan').innerText = `${data.stats.enemiesUnlocked.length} / ${enemyTypes.length}`
+                        doge('collectionItemStatContainer').style.display = 'flex'
+                        doge('collectionItemTitle').classList.remove('rareUpgradeButWithoutTheOutline')
+                        const highestStats = {
+                            health: 0,
+                            melee: 0,
+                            damage: 0,
+                            fireRate: 10000000,
+                            speed: 0
+                        }
+                        for(const key in enemyTypes) {
+                            if(enemyTypes[key].health > highestStats.health) highestStats.health = enemyTypes[key].health
+                            if(enemyTypes[key].damage > highestStats.melee) highestStats.melee = enemyTypes[key].damage
+                            if(enemyTypes[key].gun) {
+                                if(enemyTypes[key].gun.damage > highestStats.damage) highestStats.damage = enemyTypes[key].gun.damage
+                                if(enemyTypes[key].gun.cooldown < highestStats.fireRate) highestStats.fireRate = enemyTypes[key].gun.cooldown
+                            }
+                            if(enemyTypes[key].speed > highestStats.speed) highestStats.speed = enemyTypes[key].speed
+        
+        
+                            const entry = document.createElement('div')
+                            entry.classList.add('collectionItem')
+        
+                            if(data.stats.enemiesUnlocked.includes(enemyTypes[key].name)) {
+                                entry.innerHTML = `<div style="background-color: ${enemyTypes[key].color}"></div>`                        
+                                entry.onmouseenter = () => {
+                                    doge('collectionImg').innerHTML = `<div style="background-color: ${enemyTypes[key].color}; width: ${enemyTypes[key].size}px;"></div>`
+                                    doge('collectionItemTitle').innerText = `ENEMY ${key}`
+                                    doge('collectionItemDesc').innerText = enemyTypes[key].description
+                                    
+                                    doge('collectionStatBarHealth').style.width = enemyTypes[key].health / highestStats.health * 100 + '%'
+                                    doge('collectionStatHealthLabel').innerText = `HEALTH: ${enemyTypes[key].health}`
+                                    doge('collectionStatBarMelee').style.width = enemyTypes[key].damage / highestStats.melee * 100 + '%'
+                                    doge('collectionStatMeleeLabel').innerText = `MELEE: ${enemyTypes[key].damage}`
+                                    if(enemyTypes[key].gun) {
+                                        doge('collectionStatBarDamage').style.width = enemyTypes[key].gun.damage / highestStats.damage * 100 + '%'
+                                        doge('collectionStatDamageLabel').innerText = `DAMAGE: ${enemyTypes[key].gun.damage}`
+                                        doge('collectionStatBarFireRate').style.width = highestStats.fireRate / enemyTypes[key].gun.cooldown * 100 + '%'
+                                        doge('collectionStatFireRateLabel').innerText = `FIRE RATE: ${enemyTypes[key].gun.cooldown / 1000}s`
+                                    } else {
+                                        doge('collectionStatBarDamage').style.width = 0
+                                        doge('collectionStatDamageLabel').innerText = `DAMAGE: 0`
+                                        doge('collectionStatBarFireRate').style.width = 0
+                                        doge('collectionStatFireRateLabel').innerText = `FIRE RATE: 0`
+                                    }
+                                    
+                                    doge('collectionStatBarSpeed').style.width = enemyTypes[key].speed / highestStats.speed * 100 + '%'
+                                    doge('collectionStatSpeedLabel').innerText = `SPEED: ${enemyTypes[key].speed}`
+                                }
+                            } else {
+                                entry.innerHTML = `<spsn>?</spsn>`
+        
+                                entry.onmouseenter = () => {
+                                    doge('collectionImg').innerHTML = `<span>?</span>`
+                                    doge('collectionItemTitle').innerText = `???`
+                                    doge('collectionItemDesc').innerText = ''
+        
+                                    doge('collectionStatBarHealth').style.width = 0
+                                    doge('collectionStatHealthLabel').innerText = `HEALTH: ?`
+                                    doge('collectionStatBarMelee').style.width = 0
+                                    doge('collectionStatMeleeLabel').innerText = `MELEE: ?`
+                                    doge('collectionStatBarDamage').style.width = 0
+                                    doge('collectionStatDamageLabel').innerText = `DAMAGE: ?`
+                                    doge('collectionStatBarFireRate').style.width = 0
+                                    doge('collectionStatFireRateLabel').innerText = `FIRE RATE: ?`
+                                    doge('collectionStatBarSpeed').style.width = 0
+                                    doge('collectionStatSpeedLabel').innerText = `SPEED: ?`
+                                }
+                            }
+                            doge('innerCollection').append(entry)
+                        }
+
+                    } else {
+                        doge('collectionTitleSpan').innerText = 'UPGRADES'
+                        doge('collectionButtonUpgrades').style.backgroundColor = 'white'
+                        doge('collectionButtonUpgrades').style.color = 'black'
+                        doge('collectionButtonEnemies').style.backgroundColor = 'unset'
+                        doge('collectionButtonEnemies').style.color = 'unset'
+                        doge('collectionItemStatContainer').style.display = 'none'
+                        doge('innerCollectionProgressBar').style.width = Object.keys(data.stats.upgrades).length / (upgrades.length + rareUpgrades.length) * 100 + '%'
+                        doge('collectionProgressBarOverlaySpan').innerText = `${Object.keys(data.stats.upgrades).length} / ${upgrades.length + rareUpgrades.length}`
+
+                        for(const key in upgrades) {
+                            const entry = document.createElement('div')
+                            entry.classList.add('collectionItem')
+                            entry.style.width = '50px'
+                            if(data.stats.upgrades[upgrades[key].name]) {
+                                entry.innerHTML = `<img src="media/upgrades/${upgrades[key].name.replace(' ', '_')}.png" style="scale:2;">`
+                                
+                                entry.onmouseenter = () => {
+                                    doge('collectionImg').innerHTML = `<img src="media/upgrades/${upgrades[key].name.replace(' ', '_')}.png" style="scale:5;">`
+                                    doge('collectionItemTitle').innerText = `${upgrades[key].name}`
+                                    doge('collectionItemTitle').classList.remove('rareUpgradeButWithoutTheOutline')
+                                    doge('collectionItemDesc').innerHTML = upgrades[key].description
+                                }
+                            } else {
+                                entry.innerHTML = `<span>?</span>`
+                                
+                                entry.onmouseenter = () => {
+                                    doge('collectionImg').innerHTML = `<span>?</span>`
+                                    doge('collectionItemTitle').innerText = `???`
+                                    doge('collectionItemDesc').innerText = ''
+        
+                                    doge('collectionStatBarHealth').style.width = 0
+                                    doge('collectionStatHealthLabel').innerText = `HEALTH: ?`
+                                    doge('collectionStatBarMelee').style.width = 0
+                                    doge('collectionStatMeleeLabel').innerText = `MELEE: ?`
+                                    doge('collectionStatBarDamage').style.width = 0
+                                    doge('collectionStatDamageLabel').innerText = `DAMAGE: ?`
+                                    doge('collectionStatBarFireRate').style.width = 0
+                                    doge('collectionStatFireRateLabel').innerText = `FIRE RATE: ?`
+                                    doge('collectionStatBarSpeed').style.width = 0
+                                    doge('collectionStatSpeedLabel').innerText = `SPEED: ?`
+                                }
+                            }          
+                            
+                            doge('innerCollection').append(entry)
+                        }
+
+                        for(const key in rareUpgrades) {
+                            const entry = document.createElement('div')
+                            entry.classList.add('collectionItem')
+                            entry.style.animation = `rareUpgradeGlow 2.5s linear -${DeBread.randomNum(0, 2500)}ms infinite forwards`
+                            entry.style.width = '50px'
+                            if(data.stats.upgrades[rareUpgrades[key].name]) {
+                                entry.innerHTML = `<img src="media/upgrades/${rareUpgrades[key].name.replace(' ', '_')}.png" style="scale:2;">`
+    
+                                entry.onmouseenter = () => {
+                                    doge('collectionImg').innerHTML = `<img src="media/upgrades/${rareUpgrades[key].name.replace(' ', '_')}.png" style="scale:5;" class="rareUpgradeButWithoutTheOutline">`
+                                    doge('collectionItemTitle').innerText = `${rareUpgrades[key].name}`
+                                    doge('collectionItemTitle').classList.add('rareUpgradeButWithoutTheOutline')
+                                    doge('collectionItemDesc').innerHTML = rareUpgrades[key].description
+                                }
+                            } else {
+                                entry.innerHTML = `<span style="color:white;">?</span>`
+
+                                entry.onmouseenter = () => {
+                                    doge('collectionImg').innerHTML = `<span>?</span>`
+                                    doge('collectionItemTitle').innerText = `???`
+                                    doge('collectionItemDesc').innerText = ''
+        
+                                    doge('collectionStatBarHealth').style.width = 0
+                                    doge('collectionStatHealthLabel').innerText = `HEALTH: ?`
+                                    doge('collectionStatBarMelee').style.width = 0
+                                    doge('collectionStatMeleeLabel').innerText = `MELEE: ?`
+                                    doge('collectionStatBarDamage').style.width = 0
+                                    doge('collectionStatDamageLabel').innerText = `DAMAGE: ?`
+                                    doge('collectionStatBarFireRate').style.width = 0
+                                    doge('collectionStatFireRateLabel').innerText = `FIRE RATE: ?`
+                                    doge('collectionStatBarSpeed').style.width = 0
+                                    doge('collectionStatSpeedLabel').innerText = `SPEED: ?`
+                                }
+                            }
+
+                            doge('innerCollection').append(entry)
+                        }
+
+                    }
+                }
+
+                doge('collectionButtonEnemies').onclick = () => {updateCollectionMenu(0)}
+                doge('collectionButtonUpgrades').onclick = () => {updateCollectionMenu(1)}
+                updateCollectionMenu(0)
+            }
+            
             if(menu !== 'play') {
                 player.health = player.maxHealth
+                clearPlayArea()
             }
         }, 100);
     }, data.settings.menu_transition_speed);
@@ -410,7 +586,7 @@ function openMenu(menu) {
 }
 
 // data.settings.sandbox = true
-// openMenu('achievements')
+// openMenu('collection')
 // openMenu('play')
 
 function openProfileImgPicker() {
@@ -527,7 +703,8 @@ const changelogs = [
     'v1.00',
     'v1.01',
     'v1.02',
-    'v1.03'
+    'v1.03',
+    'v1.04'
 ]
 let selectedChangelog = changelogs.length - 1
 function renderChangelog(key) {

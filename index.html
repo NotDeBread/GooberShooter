@@ -13,6 +13,8 @@
 </head>
 
 <body>
+    <div id="square"></div>
+
     <em id="saveIndicator">Game Saved.</em>
     <div id="loadingScreen">
         <div style="display: flex; align-items: center; flex-direction: column;">
@@ -155,13 +157,15 @@
         </div>
         <div>
             <div id="mainTitleScreenTitle"></div>
-            <span style="font-size: 15px;">v1.03</span>
+            <span style="font-size: 15px;">v1.04</span>
         </div>
         <div class="genericMenuButtons">
             <button class="genericMenuButton" onclick="openMenu('game')">PLAY</button>
             <button class="genericMenuButton" onclick="openMenu('character')">CHARACTER SELECT</button>
             <button class="genericMenuButton" onclick="openMenu('achievements')">ACHIEVEMENTS</button>
             <button class="genericMenuButton" onclick="openMenu('stats')">STATS</button>
+            <button class="genericMenuButton" onclick="openMenu('collection')" style="position: relative;">COLLECTION<span
+                    style="position: absolute; right: -20px; top: -5px; color: yellow; rotate: 10deg; background-color: black;">New!</span></span></button>
             <div style="display: flex; width: 150px; justify-content: space-between;">
                 <button class="genericSquareButton" onclick="openMenu('settings')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -635,6 +639,84 @@
         </div>
     </div>
 
+    <!-- COLLECTION MENU -->
+
+    <div class="genericMenu" id="menu-collection" style="display: none;">
+        <span class="titleScreenTitle">COLLECTION</span>
+
+        <div id="collectionContainer">
+            <section>
+                <div id="collectionImg">
+
+                </div>
+                <span id="collectionItemTitle">SOME TITLE</span>
+                <span id="collectionItemDesc">Some description</span>
+                <div id="collectionItemStatContainer">
+                    <div class="collectionItemStat">
+                        <span id="collectionStatHealthLabel">HEALTH</span>
+                        <div class="collectionItemStatBar">
+                            <div class="innerCollectionItemStatBar" id="collectionStatBarHealth"></div>
+                        </div>
+                    </div>
+                    <div class="collectionItemStat">
+                        <span id="collectionStatMeleeLabel">MELEE</span>
+                        <div class="collectionItemStatBar">
+                            <div class="innerCollectionItemStatBar" id="collectionStatBarMelee"></div>
+                        </div>
+                    </div>
+                    <div class="collectionItemStat">
+                        <span id="collectionStatDamageLabel">DAMAGE</span>
+                        <div class="collectionItemStatBar">
+                            <div class="innerCollectionItemStatBar" id="collectionStatBarDamage"></div>
+                        </div>
+                    </div>
+                    <div class="collectionItemStat">
+                        <span id="collectionStatFireRateLabel">FIRE RATE</span>
+                        <div class="collectionItemStatBar">
+                            <div class="innerCollectionItemStatBar" id="collectionStatBarFireRate"></div>
+                        </div>
+                    </div>
+                    <div class="collectionItemStat">
+                        <span id="collectionStatSpeedLabel">SPEED</span>
+                        <div class="collectionItemStatBar">
+                            <div class="innerCollectionItemStatBar" id="collectionStatBarSpeed"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div id="collectionTitle">
+                    <span id="collectionTitleSpan">ENEMIES</span>
+                </div>
+                <div style="height: 100%; display: flex; flex-direction: column;">
+                    <div id="collectionProgressBarContainer">
+                        <div id="collectionProgressBar">
+                            <div id="collectionProgressBarOverlay">
+                                <span id="collectionProgressBarOverlaySpan">- / -</span>
+                            </div>
+                            <div id="innerCollectionProgressBar"></div>
+                        </div>
+                    </div>
+                    <div style="height: 100%;">
+                        <div id="innerCollection">
+                            <div class="collectionItem">
+                                ?
+                            </div>
+                        </div>
+                    </div>
+                    <div id="collectionFooter">
+                        <button class="genericMenuButton" id="collectionButtonEnemies">ENEMIES</button>
+                        <button class="genericMenuButton" id="collectionButtonUpgrades">UPGRADES</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div class="genericMenuButtons">
+            <button class="genericMenuButton" style="margin-top: 50px;" onclick="openMenu('main')">BACK</button>
+        </div>
+    </div>
+
     <!-- HELP MENU -->
 
     <div class="genericMenu" id="menu-help" style="display: none;">
@@ -893,32 +975,43 @@
             </div>
             <div id="statsContainer">
                 <div id="stats">
-                    <span class="statTitle">PLAYER</span>
-                    <span id="statPlayerSpeed">Speed: -</span>
-                    <span id="statPlayerMaxHealth">Max Health: -</span>
-                    <span id="statPlayerComboLoss">Combo Loss: -</span>
+                    <div id="innerStats">
+                        <div class="statSection" id="statSection0">
+                            <span class="statTitle" id="statTitle0">PLAYER</span>
+                            <span id="statPlayerSpeed">Speed: -</span>
+                            <span id="statPlayerMaxHealth">Max Health: -</span>
+                            <span id="statPlayerComboLoss">Combo Loss: -</span>
+                        </div>
 
-                    <span class="statTitle" style="margin-top: 25px;">BLOCK</span>
-                    <span id="statBlockSize">Size: -</span>
-                    <span id="statBlockCooldown">Cooldown: -</span>
-                    <span id="statBlockDamage">Damage: -</span>
+                        <div class="statSection" id="statSection1">
+                            <span class="statTitle" id="statTitle1" style="margin-top: 25px;">BLOCK</span>
+                            <span id="statBlockSize">Size: -</span>
+                            <span id="statBlockCooldown">Cooldown: -</span>
+                            <span id="statBlockDamage">Damage: -</span>
+                        </div>
 
-                    <span class="statTitle" style="margin-top: 25px;">GUN</span>
-                    <span id="statGunDamage">Damage: -</span>
-                    <span id="statGunMaxAmmo">Max Ammo: -</span>
-                    <span id="statGunBulletSpeed">Bullet Speed: -</span>
-                    <span id="statGunBulletSize">Bullet Size: -</span>
-                    <span id="statGunReloadSpeed">Reload Speed: -</span>
-                    <span id="statGunParasitePercent">Parasite Percent: -</span>
-                    <span id="statGunExplosionSize">Explosion Size: -</span>
-                    <span id="statGunPoisonLength">Poison Length: -</span>
-                    <span id="statGunGrow">Grow Amount: -</span>
-                    <span id="statGunFireDamage">Fire Damage: -</span>
-                    <span id="statGunRicochets">Bullet Bounces: -</span>
-                    <span id="statGunRicochetMultiplier">Bullet Bounce Multiplier: -</span>
+                        <div class="statSection" id="statSection2">
+                            <span class="statTitle" id="statTitle2" style="margin-top: 25px;">GUN</span>
+                            <span id="statGunDamage">Damage: -</span>
+                            <span id="statGunMaxAmmo">Max Ammo: -</span>
+                            <span id="statGunBulletSpeed">Bullet Speed: -</span>
+                            <span id="statGunBulletSize">Bullet Size: -</span>
+                            <span id="statGunReloadSpeed">Reload Speed: -</span>
+                            <span id="statGunParasitePercent">Parasite Percent: -</span>
+                            <span id="statGunExplosionSize">Explosion Size: -</span>
+                            <span id="statGunPoisonLength">Poison Length: -</span>
+                            <span id="statGunGrow">Grow Amount: -</span>
+                            <span id="statGunFireDamage">Fire Damage: -</span>
+                            <span id="statGunRicochets">Bullet Bounces: -</span>
+                            <span id="statGunRicochetMultiplier">Bullet Bounce Multiplier: -</span>
+                        </div>
 
-                    <span class="statTitle" style="margin-top: 25px;">ENEMIES</span>
-                    <span id="statEnemySpeedMultiplier">Speed Multiplier: -</span>
+                        <div class="statSection" id="statSection3">
+                            <span class="statTitle" id="statTitle3" style="margin-top: 25px;">ENEMIES</span>
+                            <span id="statEnemySpeedMultiplier">Speed Multiplier: -</span>
+                            <span id="statEnemyDMGMultiplier">Speed Multiplier: ADIJH</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="bigHealthBarContainer">

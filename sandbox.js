@@ -162,7 +162,7 @@ function renderToolboxMenu(menu) {
         const damageButton = document.createElement('button')
         damageButton.innerText = 'Set DMG Multi'
         damageButton.classList.add('toolboxThinButton')
-        damageButton.onclick = () => {enemyInfo.damageMultiplier = parseInt(damageInput.value)}
+        damageButton.onclick = () => {enemyInfo.damageMultiplier = parseInt(damageInput.value); updateStats()}
         waveContainer.append(damageButton)
 
         const damageInput = document.createElement('input')

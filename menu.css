@@ -17,6 +17,16 @@ m {
   outline: 2px solid rgb(255, 255, 255, 0.1);
 }
 
+/* #square {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  outline: 2px solid aqua;
+  z-index: 100;
+  transition: width cubic-bezier(0,1,.5,1) 250ms, height cubic-bezier(0,1,.5,1) 250ms, left cubic-bezier(0,1,.5,1) 250ms, top cubic-bezier(0,1,.5,1) 250ms;
+} */
+
 #saveIndicator {
   position: absolute;
   bottom: 5px;
@@ -951,7 +961,6 @@ input[type="range"]::-moz-range-thumb {
   transform: scaleY(1.25);
 }
 
-
 #pause {
   gap: 25px;
 }
@@ -1467,4 +1476,172 @@ coolLine {
 
 #statActivityContainer div:nth-child(2n+1) {
   background-color: rgb(255, 255, 255, 0.1);
+}
+
+#collectionContainer {
+  width: 900px;
+  height: 500px;
+  outline: 2px solid white;
+  background-color: rgb(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+  display: flex;
+}
+
+#collectionContainer section {
+  height: 100%;
+  width: 70%;
+}
+
+#collectionContainer section:nth-child(1) {
+  width: calc(30% - 22px);
+  height: calc(100% - 20px);
+  border-right: 2px solid white;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+#collectionImg {
+  width: 100%;
+  height: 258px;
+  outline: 2px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#collectionImg div {
+  aspect-ratio: 1 / 1;
+}
+
+#collectionImg span {
+  font-size: 5em;
+  font-weight: 700;
+  opacity: 0.1;
+}
+
+#collectionItemTitle {
+  font-size: 1.25em;
+  font-weight: 700;
+}
+
+#collectionContainer section:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  position: relative;
+}
+
+#collectionTitle {
+  border-bottom: 2px solid white;
+  width: 100%;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  font-weight: 700;
+}
+
+#collectionProgressBarContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(100% - 20px);
+  padding: 10px;
+}
+
+#collectionProgressBar {
+  width: 100%;
+  height: 25px;
+  outline: 2px solid white;
+  position: relative;
+}
+
+#collectionProgressBarOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  mix-blend-mode: difference;
+  font-weight: 700;
+}
+
+#innerCollectionProgressBar {
+  height: 100%;
+  width: 50%;
+  background-color: white;
+  transition: width cubic-bezier(0,1,.5,1) 500ms;
+}
+
+#innerCollection {
+  width: calc(100% - 20px);
+  padding: 10px;
+  max-height: 350px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.collectionItem {
+  width: 75px;
+  aspect-ratio: 1 / 1;
+  outline: 2px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 2em;
+  color: grey;
+  overflow: hidden;
+  cursor: help;
+}
+
+.collectionItem div {
+  aspect-ratio: 1 / 1;
+  width: 50px;
+}
+
+#collectionItemDesc {
+  height: 75px;
+  line-height: 1.1;
+}
+
+#collectionItemStatContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.collectionItemStat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+}
+
+.collectionItemStatBar {
+  height: 20px;
+  width: 100px;
+  outline: 2px solid white;
+}
+
+.innerCollectionItemStatBar {
+  height: 100%;
+  width: 50%;
+  background-color: white;
+  transition: width cubic-bezier(0,1,.5,1) 250ms;
+}
+
+#collectionFooter {
+  width: 100%;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 2px solid white;
+  gap: 25px;
 }

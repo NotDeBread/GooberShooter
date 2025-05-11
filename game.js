@@ -22,9 +22,14 @@ function resetPlayer() {
         dashDate: 0,
         stamina: 100,
         dashes: 4,
+        dashCooldown: 500,
         staminaRegen: 1,
+
         immune: false,
+        
         poisonTrail: 0,
+        dashMines: 0,
+        dashDamage: 0,
     
         points: 0,
         style: 50,
@@ -66,7 +71,7 @@ function resetPlayer() {
             cooldown: 2500,
             size: 150,
             damage: 15,
-            parryPoisonFieldTicks: 0,
+            parryPoison: 0,
             frostburn: 0,
             explosive: 0,
             reloadTriggers: 0,
@@ -74,7 +79,7 @@ function resetPlayer() {
     
         sawblades: 0,
     
-        speed: 5,
+        speed: 4,
         intervals: {
             up: undefined,
             left: undefined,
@@ -535,7 +540,7 @@ document.addEventListener('keydown', ev => {
                 }
             }, reloadSpeed);
         }
-        if(ev.key.toLowerCase() === 'shift' && player.stamina >= 100 / player.dashes && performance.now() - player.dashDate > 500 && !selectedEnemy) {
+        if(ev.key.toLowerCase() === ' ' && player.stamina >= 100 / player.dashes && performance.now() - player.dashDate > player.dashCooldown && !selectedEnemy) {
             player.dashDate = performance.now()
             DeBread.playSound(`media/audio/dash${DeBread.randomNum(0, 2)}.mp3`, 0.25)
             DeBread.shake(game, 10, 5, 5, 100)
@@ -562,6 +567,9 @@ document.addEventListener('keydown', ev => {
             if(player.poisonTrail > 0) {
                 createPoisonField([player.pos[0] + player.size / 2, player.pos[1] + player.size / 2], 30 + (player.poisonTrail * 10), 5 + player.poisonTrail, 10 + player.poisonTrail, true)
             }
+            if(player.dashMines > 0) {
+                createMine([player.pos[0] + player.size / 2, player.pos[1] + player.size / 2], 25 + player.dashMines * 10, 15 + player.dashMines * 10)
+            }
             for(let i = 1; i < 6; i++) {
                 setTimeout(() => {
                     player.dashing -= 0.5
@@ -583,6 +591,17 @@ document.addEventListener('keydown', ev => {
 
                     if(player.poisonTrail > 0) {
                         createPoisonField([player.pos[0] + player.size / 2, player.pos[1] + player.size / 2], 30 + (player.poisonTrail * 10), 5 + player.poisonTrail, player.poisonTrail, true)
+                    }
+
+                    if(player.dashDamage > 0) {
+                        game.querySelectorAll('enemy').forEach(enemy => {
+                            if(isColliding(enemy, playerD) && !enemy.preparing) {
+                                enemy.damage(player.dashDamage)
+                                DeBread.playSound('media/audio/punch.mp3', 0.1)
+                                createPopupText([enemy.pos[0] + (enemy.size / 2), enemy.pos[1] + (enemy.size / 2)], player.dashDamage * enemy.damageReduction, 25, 700, 'red')
+                                getPoints(player.dashDamage + (1 + (player.combo / 10)), '+Rammed')
+                            }
+                        })
                     }
                 }, 50 * i);
             }
@@ -757,9 +776,13 @@ document.addEventListener('keydown', ev => {
         doge('statsContainer').style.left = '25px'
         ev.preventDefault()
     }
+
+    if(ev.key.toLowerCase() === 'shift' && gameActive && data.settings.sandbox) {
+        createNoti(undefined, 'Whoops!', 'Dash using the spacebar.')
+    }
 })
 
-document.addEventListener('keyup', (ev) => {
+document.addEventListener('keyup', ev => {
     if(ev.key.toLowerCase() === 'w' && player.intervals.up) {
         clearInterval(player.intervals.up)
         player.intervals.up = undefined
@@ -784,10 +807,55 @@ document.addEventListener('keyup', (ev) => {
     }
 })
 
+function checkScrollDirectionIsUp(event) {
+    if (event.wheelDelta) {
+      return event.wheelDelta > 0;
+    }
+    return event.deltaY < 0;
+}
+
+let statScroll = 0
+const sectionHeights = [
+    doge('statSection0').offsetHeight,
+    doge('statSection1').offsetHeight,
+    doge('statSection2').offsetHeight,
+    doge('statSection3').offsetHeight,
+]
+document.addEventListener('wheel', ev => {
+    if(checkScrollDirectionIsUp(ev)) {
+        statScroll--
+    } else {
+        statScroll++
+    }
+    statScroll = Math.min(statScroll, 3) //max at 3
+    statScroll = Math.max(statScroll, 0) //min at 0
+
+    updateStatScroll()
+})
+
+function updateStatScroll() {
+    for(let i = 0; i < 4; i++) {
+        doge(`statSection${i}`).style.fontSize = '0.5em'
+        doge(`statSection${i}`).style.filter = 'blur(1px)'
+        doge(`statSection${i}`).style.opacity = 0.5
+        doge(`statSection${i}`).style.marginLeft = '0px'
+    } 
+    doge(`statSection${statScroll}`).style.fontSize = '1em'
+    doge(`statSection${statScroll}`).style.filter = 'blur(0px)'
+    doge(`statSection${statScroll}`).style.marginLeft = '10px'
+    doge(`statSection${statScroll}`).style.opacity = 1
+
+    let height = 0
+    for(let i = 0; i < statScroll; i++) {
+        height += sectionHeights[i]
+    }
+    doge('innerStats').style.top = (window.innerHeight / 2) - (sectionHeights[statScroll] / 2) - 50 * statScroll + 'px'
+} updateStatScroll()
+
 //stamina recharge interval
 setInterval(() => {
     if(!paused && performance.now() - player.dashDate > 1000 - (Math.max(250, (player.staminaRegen - 1) * 10)) && player.stamina < 100) {
-        player.stamina += player.staminaRegen
+        player.stamina += (player.staminaRegen / player.dashes) * 4
         updateUI()
     }
     if(player.stamina > 100) {
@@ -1070,8 +1138,8 @@ function update() {
                     if(isColliding(bullet, enemy) && !enemy.preparing) {
                         enemy.damage(bullet.damage)
                         createExplosion([bullet.pos[0], bullet.pos[1]], 250, bullet.damage, true)
-                        if(player.block.parryPoisonFieldTicks) {
-                            createPoisonField([bullet.pos[0], bullet.pos[1]], 75 + player.block.parryPoisonFieldTicks, player.block.parryPoisonFieldTicks, player.gun.damage / 2.5, true)
+                        if(player.block.parryPoison) {
+                            createPoisonField([bullet.pos[0], bullet.pos[1]], 75 + player.block.parryPoison, player.block.parryPoison, player.gun.damage / 2.5, true)
                         }
                         if(bullet.poisonFieldTicks) {
                             createPoisonField([bullet.pos[0], bullet.pos[1]], 100, bullet.poisonFieldTicks, bullet.damage / 5, false)
@@ -1099,8 +1167,8 @@ function update() {
                 }
                 if(bullet.hurtSelf) {
                     createExplosion([bullet.pos[0], bullet.pos[1]], 250, bullet.damage, true)
-                    if(player.block.parryPoisonFieldTicks) {
-                        createPoisonField([bullet.pos[0], bullet.pos[1]], 75 + player.block.parryPoisonFieldTicks, player.block.parryPoisonFieldTicks, player.gun.damage / 5, true)
+                    if(player.block.parryPoison) {
+                        createPoisonField([bullet.pos[0], bullet.pos[1]], 75 + player.block.parryPoison, player.block.parryPoison, player.gun.damage / 5, true)
                     }
                 }
                 if(bullet.poisonFieldTicks) {
@@ -1123,6 +1191,14 @@ function update() {
                 clearInterval(bullet.gunUpdateInterval)
                 bullet.remove()
             }
+        }
+    })
+
+    //PLAYER MINE COLLISION
+
+    game.querySelectorAll('.mine').forEach(mine => {
+        if(isColliding(playerD, mine) && mine.passive) {
+            mine.detonate()
         }
     })
 } setInterval(update, 10)
@@ -1308,6 +1384,11 @@ document.addEventListener('mousedown', ev => {
                                             bullet.damage *= player.gun.ricochetMultiplier
                                             if(player.gun.explosionSize) {
                                                 createExplosion([bullet.pos[0] + player.gun.bulletSize / 2, bullet.pos[1] + player.gun.bulletSize / 2], player.gun.explosionSize, bullet.damage, false, true)
+                                            }
+
+                                            if(bullet.timesRicocheted >= player.gun.ricochetAmount) {
+                                                bullet.remove()
+                                                clearInterval(bullet.interval)
                                             }
                                         }
                                     } else if(
@@ -2036,6 +2117,14 @@ function createExplosion(pos, size, damage, ignorePlayer, kys) {
         }
     })
 
+    game.querySelectorAll('.mine').forEach(mine => {
+        setTimeout(() => {            
+            if(isColliding(explosion, mine)) {
+                mine.detonate()
+            }
+        }, 10);
+    })
+
     // let explosionCenter = [pos[0] + size / 2, pos[1] + size / 2]
     // game.querySelectorAll('.bullet').forEach(bullet => {
     //     if (isColliding(explosion, bullet)) {
@@ -2116,6 +2205,7 @@ function createPoisonField(pos, size, ticks, damage, ignorePlayer = true) {
                 game.querySelectorAll('enemy').forEach((enemy) => {
                     if(isColliding(enemy, field)) {
                         enemy.damage(damage)
+                        getPoints(((damage / 10) + 1) * ((player.combo / 10) + 1), '+Poisoned')
                         DeBread.playSound(`media/audio/poisonTick${DeBread.randomNum(0, 2)}.mp3`, 0.25)
                         createPopupText([enemy.pos[0] + enemy.size / 2, enemy.pos[1] + enemy.size / 2], damage * enemy.damageReduction, 20, 600, 'red')
                     }
@@ -2133,6 +2223,43 @@ function createPoisonField(pos, size, ticks, damage, ignorePlayer = true) {
     }, ticks * 500);
 
     game.append(field)
+}
+
+function createMine(pos, size, damage, ignorePlayer = true) {
+    const mine = document.createElement('freeElement')
+    mine.classList.add('mine')
+    mine.style.left = pos[0] - size / 2 +'px'
+    mine.style.top = pos[1] - size / 2 +'px'
+    mine.style.width = size +'px'
+    mine.style.setProperty('--mineSize', size + 'px')
+    mine.style.border = `inset 50% rgb(100, 100, 100)`
+
+
+    if(ignorePlayer) {
+        mine.style.setProperty('--mineColor', 'lime')
+    } else {
+        mine.style.setProperty('--mineColor', 'red')
+        mine.passive = true
+    }
+
+    DeBread.playSound('media/audio/magnetPlace.mp3', 0.5)
+    DeBread.playSound('media/audio/mineBeep.mp3', 0.15)
+    mine.beepInterval = setInterval(() => {
+        DeBread.playSound('media/audio/mineBeep.mp3', 0.15)
+    }, 2500);
+
+    game.append(mine)
+
+    mine.detonate = () => {
+        mine.remove()
+        clearInterval(mine.beepInterval)
+        createExplosion([pos[0], pos[1]], size * 5, damage, ignorePlayer)
+    }
+
+    mine.delete = () => {
+        mine.remove()
+        clearInterval(mine.beepInterval)    
+    }
 }
 
 function createMagnet(from, to) {
@@ -2232,6 +2359,7 @@ function createMagnet(from, to) {
 //ENEMIES
 const enemyTypes = [
     guy0 = { //Red Guy
+        name: 'guy0',
         credits: 1,
 
         size: 50,
@@ -2242,6 +2370,7 @@ const enemyTypes = [
         description: 'Just the average enemy, nothing special.'
     },
     guy1 = { //yellou
+        name: 'guy1',
         credits: 3,
 
         size: 50,
@@ -2260,6 +2389,7 @@ const enemyTypes = [
         description: 'Shoots fast bullets dealing 25 damage.'
     },
     guy2 = {
+        name: 'guy2',
         credits: 4,
 
         size: 50,
@@ -2278,6 +2408,7 @@ const enemyTypes = [
         description: 'Shoots very frequently but does little damage.'
     },
     guy3 = { //Green guy
+        name: 'guy3',
         credits: 8,
 
         size: 50,
@@ -2295,6 +2426,7 @@ const enemyTypes = [
         description: 'Has a defensive poison field around them, doing 20 damage a second when you\'re in range.'
     },
     guy4 = { //Big grey guy
+        name: 'guy4',
         credits: 10,
 
         size: 75,
@@ -2313,6 +2445,7 @@ const enemyTypes = [
         description: 'Very slow-moving but has high health and high damage.'
     },
     guy5 = { //Brown Guy
+        name: 'guy5',
         credits: 15,
 
         size: 50,
@@ -2332,6 +2465,7 @@ const enemyTypes = [
         description: 'Shoots explosive rounds.'
     },
     guy6 = { //Virtue ultrakill
+        name: 'guy6',
         credits: 15,
 
         size: 50,
@@ -2350,6 +2484,7 @@ const enemyTypes = [
         description: 'Summons a beam every few seconds that eventually explodes dealing 75 damage.'
     },
     guy7 = { //fast Virtue ultrakill
+        name: 'guy7',
         credits: 20,
 
         size: 50,
@@ -2368,6 +2503,7 @@ const enemyTypes = [
         description: 'Summons frequent beams that explode dealing 25 damage.'
     },
     guy8 = { //The big one
+        name: 'guy8',
         credits: 50,
         big: true,
 
@@ -2395,6 +2531,7 @@ const enemyTypes = [
         description: 'Extremely slow-moving enemy that summons beams, does high damage, and has extreme health.'
     },
     guy9 = { //minecraft baby zombie
+        name: 'guy9',
         credits: 15,
 
         size: 40,
@@ -2405,6 +2542,7 @@ const enemyTypes = [
         description: 'A small, fast moving enemy that does little damage.'
     },
     guy10 = { //The bigger one
+        name: 'guy10',
         credits: 125,
         big: true,
 
@@ -2425,6 +2563,7 @@ const enemyTypes = [
         description: 'A stationary enemy with extreme health and damage.'
     },
     guy11 = { //Poison field shooter guy
+        name: 'guy11',
         credits: 30,
 
         size: 75,
@@ -2445,6 +2584,7 @@ const enemyTypes = [
         description: 'An average enemy that shoots bullets spawning poison fields.'
     },
     guy12 = { //Green guy
+        name: 'guy12',
         credits: 50,
 
         size: 50,
@@ -2470,6 +2610,7 @@ const enemyTypes = [
         description: 'Has a defensive poison field around them, and shoots bullets spawning poison fields.'
     },
     guy13 = {
+        name: 'guy13',
         credits: 10,
         size: 40,
 
@@ -2487,6 +2628,7 @@ const enemyTypes = [
         description: 'Very quick and will explode when hit with a bullet or hits the player.'
     },
     guy14 = {
+        name: 'guy14',
         credits: 20,
         size: 75,
 
@@ -2512,12 +2654,13 @@ const enemyTypes = [
         description: 'A slow moving enemy that shoots grenades.'
     },
     guy15 = {
+        name: 'guy15',
         credits: 100,
         big: true,
         size: 150,
 
         speed: 1,
-        health: 5000,
+        health: 1250,
         color: 'rgb(110, 61, 108)',
 
         damage: 25,
@@ -2542,6 +2685,7 @@ const enemyTypes = [
         description: 'A large, slow moving enemy that shoots grenades and bullets spawning poison fields.'
     },
     guy16 = {
+        name: 'guy16',
         credits: 15,
         size: 25,
 
@@ -2556,6 +2700,7 @@ const enemyTypes = [
         description: 'A small enemy that doesnt move nor do damage, but prevents the player from healing.'
     },
     guy17 = {
+        name: 'guy17',
         credits: 15,
         size: 25,
 
@@ -2680,6 +2825,12 @@ const extraEnemies = {
 
 //SPAWNING ENEMIES
 function spawnEnemy(type, pos) {
+    //Add enemy unlock
+    if(!data.stats.enemiesUnlocked.includes(type.name) && !data.settings.sandbox) {
+        data.stats.enemiesUnlocked.push(type.name)
+        console.log(data.stats.enemiesUnlocked)
+    }
+
     const enemy = document.createElement('enemy')
     enemy.alive = true
     enemy.preparing = true
@@ -2809,6 +2960,13 @@ function spawnEnemy(type, pos) {
                     enemy.pos[0] += (enemy.speed * enemyInfo.speedMultiplier) * Math.cos(Math.atan2(dy, dx))
                     enemy.pos[1] += (enemy.speed * enemyInfo.speedMultiplier) * Math.sin(Math.atan2(dy, dx))
                 }
+
+                //COLLIDING WITH MINE?
+                game.querySelectorAll('.mine').forEach(mine => {
+                    if(isColliding(mine, enemy)) {
+                        mine.detonate()
+                    }
+                })
 
                 if(enemy.pos[0] > game.offsetWidth - type.size) {
                     enemy.pos[0] = game.offsetWidth - type.size
@@ -3448,9 +3606,9 @@ const upgrades = [
         name: 'Poison Flask',
         description: `
             <span>Dashing creates a trail of poison fields.</span><br>
-            <span><b>-25%</b> Speed</span>
+            <span><b>-20%</b> Speed</span>
         `,
-        action: () => {player.poisonTrail++; player.speed *= 0.75}
+        action: () => {player.poisonTrail++; player.speed *= 0.8}
     },
     {
         name: 'Precision Goggles',
@@ -3598,7 +3756,7 @@ const upgrades = [
             <span><b>-5%</b> Block range</span>
         `,
         action: () => {
-            player.block.parryPoisonFieldTicks += 10
+            player.block.parryPoison += 10
             player.block.size *= 0.95
         }
     },
@@ -3638,6 +3796,31 @@ const upgrades = [
             player.block.damage *= 0.90
             player.block.cooldown *= 1.1
             playerD.getSaws()
+        }
+    },
+    {   
+        name: 'Mine',
+        description: `
+            <span>Creates a mine when the player dashes.</span><br>
+            <span><b>-1</b> Dash</span><br>
+            <span><b>-10%</b> Speed</span>
+        `,
+        requirement: () => {return player.dashes > 1},
+        action: () => {
+            player.dashMines++
+            player.dashes--
+            player.speed *= 0.9
+        }
+    },
+    {   
+        name: 'Battering Ram',
+        description: `
+            <span><g>+5</g> Dash damage</span><br>
+            <span><b>-10%</b> Stamina regen</span>
+        `,
+        action: () => {
+            player.dashDamage += 5
+            player.staminaRegen *= 0.9
         }
     },
     {   
@@ -4038,6 +4221,8 @@ function createWarning(title, text) {
             }, 500);
         }, 5000);
     }, 100);
+
+    updateStats()
 }
 
 //Add upgrade textures to load query...
@@ -4077,6 +4262,7 @@ function updateStats() {
     doge('statGunRicochetMultiplier').innerText = `Bullet Bounce Multiplier: ${DeBread.round(player.gun.ricochetMultiplier, 1)}x`
 
     doge('statEnemySpeedMultiplier').innerText = `Speed Multiplier: ${DeBread.round(enemyInfo.speedMultiplier, 2)}x`
+    doge('statEnemyDMGMultiplier').innerText = `DMG Multiplier: ${DeBread.round(enemyInfo.damageMultiplier, 2)}x`
 
     if(!doge('statsContainer').style.left !== '25px' && !data.settings.keepStatsOpen) {
         doge('statsContainer').style.left = -doge('statsContainer').offsetWidth + 'px'
@@ -4142,21 +4328,26 @@ function createPopupText(pos, text, size, weight = 500, color = 'white', global 
 
 function clearPlayArea() {
     //ENEMIES
-    game.querySelectorAll('enemy').forEach((enemy) => {
+    game.querySelectorAll('enemy').forEach(enemy => {
         enemy.kill()
     })
 
     //ENEMY BULLETS
-    game.querySelectorAll('.bullet').forEach((bullet) => {
+    game.querySelectorAll('.bullet').forEach(bullet => {
         bullet.remove()
         clearInterval(bullet.gunUpdateInterval)
         clearInterval(bullet.interval)
     })
 
     //POISON FIELDS
-    game.querySelectorAll('.customField').forEach((field) => {
+    game.querySelectorAll('.customField').forEach(field => {
         field.active = false
         field.remove()
+    })
+
+    //MINES
+    game.querySelectorAll('.mine').forEach(mine => {
+        mine.delete()
     })
 }
 

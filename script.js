@@ -19,8 +19,10 @@ const defaultData = {
         healthHealed: 0,
 
         upgrades: {},
-        activity: [],
-        xpChanges: [0]
+        activity: [], 
+        xpChanges: [0],
+
+        enemiesUnlocked: []
     },
 
     challenges: [],
@@ -280,3 +282,14 @@ function getImage(url) {
         }
     }
 }
+
+// //square thing
+
+// document.querySelectorAll('div, span, img, button').forEach(div => {
+//     div.addEventListener('mouseenter', () => {
+//         doge('square').style.left = div.getBoundingClientRect().left+'px'
+//         doge('square').style.top = div.getBoundingClientRect().top+'px'
+//         doge('square').style.width = div.offsetWidth+'px'
+//         doge('square').style.height = div.offsetHeight+'px'
+//     }
+// )})

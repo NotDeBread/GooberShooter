@@ -425,6 +425,8 @@ Enemy12: Has a defensive poison field around them, and shoots bullets spawning p
 
 # v1.03
 
+-Collection menu.
+
 **GAMEPLAY**
 -Dashing and stamina.
 -It is now impossible to be one-shot by an enemy. Instead, you get reduced to 1HP then can die.
@@ -447,3 +449,27 @@ Enemy12: Has a defensive poison field around them, and shoots bullets spawning p
 -Optimized some character textures.
 -Some health bar improvements.
 -Removed Luna character. (As requested.)
+
+{newLog}
+
+# v1.04
+
+**GAMEPLAY**
+-Starting player speed has been reduced to 4 now that dashing is a thing. (5 => 4)
+-New upgrades:
+    Mine:
+        Creates a mine when the player dashes.
+        -1 Dash
+        -10% Speed
+    Battering Ram:
+        +2 Dash damage
+        -10% Stamina regen
+
+**OTHER STUFF**
+-Collection menu.
+-New character: Eddie.
+-Enemy damage multipler is now displayed in the stats UI.
+
+
+**BUG FIXES**
+-Friendly poison fields now give the '+Poisoned' style bonus.

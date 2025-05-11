@@ -662,23 +662,36 @@ g {
 
 #statsContainer {
   position: absolute;
-  left: 25px;
+  left: 10px;
   top: 0;
   height: 100dvh;
   display: flex;
   align-items: center;
-  transition: left ease-in-out 250ms;
 }
 
 #stats {
   display: flex;
   flex-direction: column;
+  position: relative;
+  height: 100dvh;
+}
+
+#innerStats {
+  position: absolute;
+  transition: top ease-in-out 250ms;
+}
+
+.statSection {
+  display: flex;
+  flex-direction: column;
   line-height: 1.1;
+  white-space: nowrap;
+  transition: font-size ease-in-out 250ms, filter ease-in-out 250ms, margin-left ease-in-out 250ms;
 }
 
 .statTitle {
-  font-size: 1.1em;
   font-weight: 700;
+  font-size: 1.1em;
 }
 
 #bigHealthBarContainer {
@@ -981,6 +994,17 @@ coolLine {
   display: flex;
   flex-direction: column;
   align-items: center;
+  line-height: 1;
+  width: 150px;
+}
+
+.toolboxInputContainer span {
+  background-color: black;
+  z-index: 2;
+  height: 7px;
+  padding: 5px;
+  pointer-events: none;
+  color: rgb(200, 200, 200);
 }
 
 .toolboxInput {
@@ -1537,6 +1561,33 @@ enemy span {
   to {
     opacity: 1;
     scale: 100%;
+  }
+}
+
+.mine {
+  background-color: var(--mineColor);
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  animation: mineLoop 2.5s cubic-bezier(0,1,.5,1) infinite forwards;
+}
+
+.mine::after {
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 50%;
+  box-shadow: inset 0px 0px 0px calc(var(--mineSize) / 5) rgb(100, 100, 100);
+}
+
+@keyframes mineLoop {
+  from {
+    background-color: var(--mineColor);
+    box-shadow: 0px 0px 25px var(--mineColor);
+  }
+  to {
+    background-color: black;
+    box-shadow: 0px 0px 0px var(--mineColor);
   }
 }
 

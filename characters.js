@@ -196,6 +196,15 @@ const characters = {
         pack: 'custom',
         taunts: 3,
     },
+    eddie: {
+        unlocked: false,
+        credits: false,
+        name: 'Eddie',
+        desc: 'funny computer (made by SandEater on Discord)',
+        pack: 'custom',
+        taunts: 3,
+        code: 'edgar'
+    },
     sasha: {
         unlocked: false,
         name: 'Sasha',
